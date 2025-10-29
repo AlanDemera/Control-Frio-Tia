@@ -1,181 +1,546 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Control Frío TÍA - Modelo Profesional</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Control Productos TÍA — Móvil Pro 3.0</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+<meta name="description" content="Control de productos TÍA — diseño móvil profesional, rojo/blanco, lector de códigos y pestaña historial.">
 <style>
   :root{
-    --bg:#fff; --text:#0f172a; --muted:#6b7280;
-    --green:#16a34a; --yellow:#f59e0b; --red:#ef4444;
-    --primary:#dc2626; --shadow:0 6px 18px rgba(2,6,23,0.08); --radius:14px;
+    --bg:#ffffff;
+    --surface:#fbfbfb;
+    --text:#0f172a;
+    --muted:#6b7280;
+    --red:#D32F2F;
+    --red-600:#C12727;
+    --green:#1E9B52;
+    --yellow:#F59E0B;
+    --card-radius:14px;
+    --shadow: 0 8px 24px rgba(2,6,23,0.08);
+    --gap:14px;
+    font-family: 'Poppins', system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
   }
-  *{box-sizing:border-box;}
-  body{margin:0;font-family:Inter,sans-serif;background:var(--bg);color:var(--text);}
-  .app{max-width:500px;margin:auto;padding:12px;}
-  h1,h2,h3{margin:0;}
-  .header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;}
-  .header .logo{font-weight:700;font-size:22px;color:white;background:var(--primary);padding:10px 16px;border-radius:12px;box-shadow:var(--shadow);}
-  .btn{padding:10px 16px;border:none;border-radius:12px;font-weight:600;font-size:16px;cursor:pointer;}
-  .btn-primary{background:var(--primary);color:white;}
-  .btn-ghost{background:#f3f4f6;color:var(--text);}
-  .chip{padding:8px 12px;border-radius:20px;background:#f3f4f6;font-size:14px;cursor:pointer;display:inline-block;margin:4px;}
-  .chip.active{background:var(--primary);color:white;}
-  .card{background:#fff;border-radius:var(--radius);padding:12px;margin-bottom:12px;box-shadow:var(--shadow);}
-  .product-card{display:flex;justify-content:space-between;align-items:center;padding:12px;border-radius:var(--radius);box-shadow:var(--shadow);margin-bottom:10px;}
-  .product-info{flex:1;margin-right:10px;}
-  .badge{padding:6px 10px;border-radius:8px;color:white;font-weight:600;font-size:14px;text-align:center;}
-  .green{background:var(--green);}
-  .yellow{background:var(--yellow);}
-  .red{background:var(--red);}
-  .tab-bar{position:fixed;bottom:0;left:0;width:100%;display:flex;justify-content:space-around;padding:8px 0;background:#fff;box-shadow:0 -3px 10px rgba(0,0,0,0.1);}
-  .tab{flex:1;text-align:center;padding:10px;font-weight:600;cursor:pointer;}
-  .tab.active{color:var(--primary);}
-  #reader{width:100%;height:250px;background:#000;display:none;margin-bottom:12px;}
-  input, select{width:100%;padding:10px;border-radius:10px;border:1px solid #e6e6e6;margin-bottom:8px;font-size:14px;}
+
+  /* Mobile-first layout */
+  *{box-sizing:border-box}
+  html,body{height:100%;margin:0;background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased}
+  .app{max-width:540px;margin:0 auto;height:100vh;display:flex;flex-direction:column;padding:12px;gap:12px}
+
+  /* Header (fixed looking) */
+  .header{
+    display:flex;align-items:center;justify-content:space-between;gap:12px;
+    padding:12px;border-radius:12px;background:linear-gradient(90deg,var(--red),var(--red-600));
+    color:white;box-shadow:var(--shadow);
+  }
+  .brand{display:flex;flex-direction:column;gap:2px}
+  .brand .title{font-size:18px;font-weight:700;letter-spacing:0.2px}
+  .brand .subtitle{font-size:12px;opacity:0.95}
+
+  .btn-add{background:white;color:var(--red);border:none;padding:10px 14px;border-radius:12px;font-weight:700;font-size:15px;cursor:pointer;box-shadow:0 6px 18px rgba(0,0,0,0.08)}
+  .btn-add:active{transform:translateY(1px)}
+
+  /* Filters / categories bar */
+  .filters {display:flex;gap:10px;overflow-x:auto;padding-bottom:4px}
+  .filter-chip{
+    flex:0 0 auto;
+    padding:10px 14px;border-radius:999px;border:2px solid var(--red);color:var(--red);background:transparent;font-weight:600;font-size:14px;cursor:pointer;white-space:nowrap;
+  }
+  .filter-chip.active{background:var(--red);color:white;box-shadow:0 6px 18px rgba(209,52,52,0.12)}
+
+  /* Main scroll area */
+  .main-scroll {flex:1;overflow:auto;padding-bottom:90px /*space for tab*/;display:flex;flex-direction:column;gap:14px;}
+
+  /* Section titles */
+  .section-title{font-size:16px;font-weight:700;margin:4px 0 8px 0;color:var(--muted);display:flex;align-items:center;gap:8px}
+
+  /* Product card large */
+  .product-card{
+    background:var(--surface);border-radius:var(--card-radius);padding:14px;display:flex;justify-content:space-between;align-items:center;gap:12px;box-shadow:var(--shadow);
+    border-left:6px solid transparent;
+  }
+  .product-left{flex:1;display:flex;flex-direction:column;gap:6px}
+  .product-name{font-size:16px;font-weight:700}
+  .product-meta{font-size:13px;color:var(--muted)}
+  .product-code{font-size:13px;color:#444}
+
+  /* left border colors for quick visual */
+  .product-card.caducado{border-left-color:var(--red)}
+  .product-card.proximo{border-left-color:var(--yellow)}
+  .product-card.vigente{border-left-color:var(--green)}
+
+  /* right actions */
+  .product-actions{display:flex;flex-direction:column;gap:8px;align-items:flex-end}
+  .badge{padding:6px 10px;border-radius:10px;font-weight:700;font-size:13px;color:white}
+  .badge.red{background:var(--red)}
+  .badge.yellow{background:var(--yellow);color:#222}
+  .badge.green{background:var(--green)}
+
+  .btn-action{padding:8px 12px;border-radius:10px;border:none;background:var(--red);color:white;font-weight:700;font-size:14px;cursor:pointer}
+  .btn-action.ghost{background:transparent;border:2px solid var(--red);color:var(--red);font-weight:700}
+
+  /* Grouped list behavior */
+  .list-group{display:flex;flex-direction:column;gap:10px}
+
+  /* Modal (full-screen card) */
+  .modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,0.55);display:none;align-items:center;justify-content:center;padding:18px;z-index:50}
+  .modal-backdrop.show{display:flex}
+  .modal{width:100%;max-width:520px;background:white;border-radius:16px;padding:16px;box-shadow:0 20px 40px rgba(0,0,0,0.25)}
+  .modal h3{margin:0 0 8px 0;font-size:18px}
+  .form-field{display:flex;flex-direction:column;gap:6px;margin-bottom:8px}
+  .input{padding:12px;border-radius:10px;border:1px solid #eee;font-size:15px}
+  .input::placeholder{color:#9aa0a6}
+  .hint{font-size:12px;color:var(--muted)}
+
+  /* Reader area */
+  #reader{width:100%;height:280px;background:#000;border-radius:10px;overflow:hidden;display:none}
+
+  /* Bottom tab / history */
+  .tabbar{position:fixed;left:0;right:0;bottom:0;display:flex;justify-content:space-between;gap:12px;padding:12px;background:white;border-top:1px solid #f0f0f0}
+  .tab-btn{flex:1;padding:12px;border-radius:12px;border:none;background:transparent;font-weight:700;font-size:16px;cursor:pointer}
+  .tab-btn.active{background:linear-gradient(90deg,var(--red),var(--red-600));color:white;box-shadow:0 8px 20px rgba(209,52,52,0.12)}
+
+  /* History cards */
+  .history-card{background:#fff;border-radius:12px;padding:12px;box-shadow:var(--shadow);display:flex;justify-content:space-between;align-items:center;gap:10px}
+  .history-left{display:flex;flex-direction:column;gap:6px}
+  .small-muted{font-size:13px;color:var(--muted)}
+
+  /* Responsive tweaks */
+  @media(min-width:520px){
+    .app{padding:18px}
+    .product-name{font-size:18px}
+  }
 </style>
 </head>
 <body>
 <div class="app">
-  <div class="header">
-    <div class="logo">TÍA</div>
-    <button id="btnAdd" class="btn btn-primary">➕ Agregar</button>
-  </div>
-
-  <!-- Filtros y búsqueda -->
-  <div class="card" id="filtersCard">
-    <div>
-      <span class="chip active" data-filter="all">Todos</span>
-      <span class="chip" data-filter="lacteos">Lácteos</span>
-      <span class="chip" data-filter="embutidos">Embutidos</span>
-      <span class="chip" data-filter="carnes">Carnes</span>
-      <span class="chip" data-filter="fruver">Fruver</span>
-      <span class="chip" data-filter="congelados">Congelados</span>
+  <!-- HEADER -->
+  <div class="header" role="banner">
+    <div class="brand">
+      <div class="title">Control Productos TÍA</div>
+      <div class="subtitle">Refrigerados — diseño profesional</div>
     </div>
-    <input id="search" type="text" placeholder="Buscar nombre o código">
+    <button id="btnAdd" class="btn-add" aria-label="Agregar producto">➕ Agregar</button>
   </div>
 
-  <!-- Listado productos -->
-  <div id="view-products">
-    <h2>Vigentes</h2>
-    <div id="list-vigentes"></div>
-    <h2>Próximos</h2>
-    <div id="list-proximos"></div>
-    <h2>Caducados</h2>
-    <div id="list-caducados"></div>
+  <!-- CATEGORIES + SEARCH -->
+  <div>
+    <div class="filters" id="filters" aria-label="Categorías">
+      <button class="filter-chip active" data-filter="all">Todos</button>
+      <button class="filter-chip" data-filter="lacteos">🧀 Lácteos</button>
+      <button class="filter-chip" data-filter="embutidos">🥩 Embutidos</button>
+      <button class="filter-chip" data-filter="carnes">🍗 Carnes</button>
+      <button class="filter-chip" data-filter="fruver">🍎 Fruver</button>
+      <button class="filter-chip" data-filter="congelados">❄️ Congelados</button>
+    </div>
+    <div style="margin-top:10px">
+      <input id="search" class="input" type="search" placeholder="Buscar por nombre o código (ej. 123456789012)">
+      <div class="hint" style="margin-top:6px">Los productos que estén <strong>caducados</strong> aparecen primero.</div>
+    </div>
   </div>
 
-  <!-- Historial -->
-  <div id="view-history" style="display:none;">
-    <h2>Historial de retirados</h2>
-    <div id="history-list"></div>
-  </div>
+  <!-- MAIN SCROLL AREA -->
+  <div class="main-scroll" id="mainScroll" role="main">
+    <!-- Sections placed in this order: Caducados -> Próximos -> Vigentes -->
+    <section>
+      <div class="section-title">🔴 A CADUCAR</div>
+      <div id="group-caducados" class="list-group" aria-live="polite"></div>
+    </section>
 
-  <!-- Modal agregar producto -->
-  <div id="modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;padding:12px;">
-    <div class="card" style="width:100%;">
-      <h3>Agregar producto</h3>
-      <input id="fName" type="text" placeholder="Nombre" required>
-      <input id="fBarcode" type="text" placeholder="Código de barras">
-      <button id="btnScan" class="btn btn-primary">📷 Escanear código</button>
-      <div id="reader"></div>
-      <select id="fCategory">
+    <section>
+      <div class="section-title">🟡 PRÓXIMOS A CADUCAR</div>
+      <div id="group-proximos" class="list-group" aria-live="polite"></div>
+    </section>
+
+    <section>
+      <div class="section-title">🟢 VIGENTES</div>
+      <div id="group-vigentes" class="list-group" aria-live="polite"></div>
+    </section>
+  </div>
+</div>
+
+<!-- HISTORIAL (hidden view, toggled) -->
+<div style="display:none" id="historyView" aria-hidden="true">
+  <div style="padding:14px">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+      <div style="font-weight:700;font-size:18px">📜 Historial de retirados</div>
+      <button id="backToProducts" class="tab-btn" style="flex:0;background:transparent;border-radius:8px;padding:8px 10px;color:var(--red);border:2px solid var(--red)">⬅ Volver</button>
+    </div>
+    <div id="historyList" style="display:flex;flex-direction:column;gap:10px;padding-bottom:120px"></div>
+  </div>
+</div>
+
+<!-- MODAL: AGREGAR PRODUCTO -->
+<div class="modal-backdrop" id="modal" aria-hidden="true">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <h3 id="modalTitle">Agregar producto</h3>
+
+    <div class="form-field">
+      <label class="hint">Nombre (ej: Leche entera Marca X 1L)</label>
+      <input id="fName" class="input" type="text" placeholder="Ej. Leche entera Marca X 1L" aria-label="Nombre">
+    </div>
+
+    <div class="form-field">
+      <label class="hint">Código de barras (manual o escanea)</label>
+      <div style="display:flex;gap:8px">
+        <input id="fBarcode" class="input" type="text" placeholder="Ej. 123456789012" aria-label="Código de barras">
+        <button id="btnScan" class="btn-action" style="border-radius:10px;padding:10px;background:var(--red);color:white">📷</button>
+      </div>
+      <div class="hint">Pulsa el icono para abrir la cámara y escanear el código. Si no funciona, verifica permisos de cámara del navegador.</div>
+    </div>
+
+    <div id="reader" aria-hidden="true"></div>
+
+    <div class="form-field">
+      <label class="hint">Categoría</label>
+      <select id="fCategory" class="input" aria-label="Categoría">
         <option value="lacteos">Lácteos</option>
         <option value="embutidos">Embutidos</option>
         <option value="carnes">Carnes</option>
         <option value="fruver">Fruver</option>
         <option value="congelados">Congelados</option>
       </select>
-      <input id="fMade" type="date" placeholder="Fecha elaboración">
-      <input id="fExpires" type="date" placeholder="Fecha caducidad" required>
-      <button id="saveProduct" class="btn btn-primary">Guardar</button>
-      <button id="btnCancel" class="btn btn-ghost">Cancelar</button>
+    </div>
+
+    <div class="form-field">
+      <label class="hint">Fecha de elaboración (opcional)</label>
+      <input id="fMade" class="input" type="date" aria-label="Fecha de elaboración">
+    </div>
+
+    <div class="form-field">
+      <label class="hint">Fecha de caducidad (obligatorio)</label>
+      <input id="fExpires" class="input" type="date" aria-label="Fecha de caducidad">
+      <div class="small-muted" id="daysLeft">— días</div>
+    </div>
+
+    <div style="display:flex;gap:10px;margin-top:10px">
+      <button id="saveBtn" class="btn-action" style="flex:1;background:var(--red);color:white">Guardar producto</button>
+      <button id="cancelBtn" class="btn-action ghost" style="flex:1;background:transparent;border:2px solid var(--red);color:var(--red)">Cancelar</button>
     </div>
   </div>
-
 </div>
 
-<!-- Pestaña inferior -->
-<div class="tab-bar">
-  <div class="tab active" data-tab="products">Productos</div>
-  <div class="tab" data-tab="history">Historial</div>
+<!-- BOTTOM TABBAR -->
+<div class="tabbar" role="navigation" aria-label="Navegación">
+  <button class="tab-btn active" id="tabProducts" data-view="products">Productos</button>
+  <button class="tab-btn" id="tabHistory" data-view="history">Historial</button>
 </div>
 
+<!-- html5-qrcode -->
 <script src="https://unpkg.com/html5-qrcode@2.3.7/minified/html5-qrcode.min.js"></script>
+
 <script>
-// ---- Datos iniciales ----
-const CATEGORIES = {lacteos:{label:'Lácteos', alertDays:2}, embutidos:{label:'Embutidos', alertDays:1}, carnes:{label:'Carnes', alertDays:2}, fruver:{label:'Fruver', alertDays:1}, congelados:{label:'Congelados', alertDays:1}};
-let state={products:[],history:[]};
-const STORAGE_KEY='control-frio-tia-v2';
-function loadState(){try{const raw=localStorage.getItem(STORAGE_KEY);if(raw)state=JSON.parse(raw);}catch(e){console.warn(e);}}
-function saveState(){localStorage.setItem(STORAGE_KEY,JSON.stringify(state));}
+/* ---------------------------
+   App JS — versión móvil pro
+   --------------------------- */
 
-// ---- Utils ----
-function uid(){return 'p_'+Math.random().toString(36).slice(2,9);}
-function daysBetween(a,b){const ms=24*60*60*1000;return Math.ceil((Date.UTC(b.getFullYear(),b.getMonth(),b.getDate())-Date.UTC(a.getFullYear(),a.getMonth(),a.getDate()))/ms);}
-function computeStatus(p){if(p.retired)return {label:'Retirado',cls:'red'};if(!p.expiresAt)return {label:'Sin fecha',cls:'yellow'};const d=daysBetween(new Date(),new Date(p.expiresAt));if(d<0)return {label:`Caducado (${Math.abs(d)}d)`,cls:'red'};if(d<=CATEGORIES[p.category]?.alertDays)return {label:`Próximo (${d}d)`,cls:'yellow'};return {label:`Vigente (${d}d)`,cls:'green'};}
+// Categorías & util
+const CATEGORIES = {
+  lacteos:{label:'Lácteos', alertDays:2},
+  embutidos:{label:'Embutidos', alertDays:1},
+  carnes:{label:'Carnes', alertDays:2},
+  fruver:{label:'Fruver', alertDays:1},
+  congelados:{label:'Congelados', alertDays:1}
+};
 
-// ---- Render ----
-function render(){
-  const q=document.getElementById('search').value.trim().toLowerCase();
-  const activeFilter=document.querySelector('.chip.active')?.dataset.filter||'all';
-  const vigentes=[],proximos=[],caducados=[];
-  state.products.forEach(p=>{
-    if(activeFilter!=='all' && p.category!==activeFilter)return;
-    if(q && !(p.name.toLowerCase().includes(q)||(p.barcode||'').toLowerCase().includes(q)))return;
-    const st=computeStatus(p);
-    const card=document.createElement('div'); card.className='product-card';
-    card.innerHTML=`<div class="product-info"><div style="font-weight:600">${p.name}</div><div>${CATEGORIES[p.category]?.label||p.category} • Caduca: ${p.expiresAt?new Date(p.expiresAt).toLocaleDateString():'—'}</div>${p.barcode?`<div>CB: ${p.barcode}</div>`:''}</div>`;
-    const badge=document.createElement('div'); badge.className='badge '+st.cls; badge.textContent=st.label;
-    card.appendChild(badge);
-    if(!p.retired){const btn=document.createElement('button');btn.className='btn btn-ghost';btn.textContent='Retirar';btn.onclick=()=>{p.retired=true;state.history.push({...p,retiredAt:new Date().toISOString()});saveState();render();};card.appendChild(btn);}
-    if(st.cls==='green')vigentes.push(card); else if(st.cls==='yellow')proximos.push(card); else caducados.push(card);
-  });
-  const lv=document.getElementById('list-vigentes'),lp=document.getElementById('list-proximos'),lc=document.getElementById('list-caducados');
-  lv.innerHTML='';lp.innerHTML='';lc.innerHTML='';
-  vigentes.forEach(c=>lv.appendChild(c));
-  proximos.forEach(c=>lp.appendChild(c));
-  caducados.forEach(c=>lc.appendChild(c));
-  // historial
-  const hist=document.getElementById('history-list'); hist.innerHTML='';
-  state.history.slice().reverse().forEach(h=>{const c=document.createElement('div');c.className='card';c.innerHTML=`<div style="font-weight:600">${h.name}</div><div>${CATEGORIES[h.category]?.label||h.category} • Retirado: ${new Date(h.retiredAt).toLocaleString()}</div>`;hist.appendChild(c);});
+function daysBetween(a,b){
+  const ms = 24*60*60*1000;
+  return Math.ceil((Date.UTC(b.getFullYear(),b.getMonth(),b.getDate()) - Date.UTC(a.getFullYear(),a.getMonth(),a.getDate()))/ms);
 }
-document.querySelectorAll('.chip').forEach(el=>el.addEventListener('click',()=>{document.querySelectorAll('.chip').forEach(x=>x.classList.remove('active'));el.classList.add('active');render();}));
-document.getElementById('search').addEventListener('input',render);
+function uid(){ return 'p_'+Math.random().toString(36).slice(2,9); }
 
-// ---- Modal agregar producto ----
-const modal=document.getElementById('modal');
-document.getElementById('btnAdd').addEventListener('click',()=>modal.style.display='flex');
-document.getElementById('btnCancel').addEventListener('click',()=>{modal.style.display='none';document.getElementById('fName').value='';document.getElementById('fBarcode').value='';});
-document.getElementById('saveProduct').addEventListener('click',()=>{
-  const data={name:document.getElementById('fName').value.trim(),barcode:document.getElementById('fBarcode').value.trim(),category:document.getElementById('fCategory').value,madeAt:document.getElementById('fMade').value||null,expiresAt:document.getElementById('fExpires').value};
-  if(!data.name||!data.expiresAt)return alert('Completa nombre y fecha');data.id=uid();data.retired=false;state.products.push(data);saveState();render();modal.style.display='none';
-});
+// State (localStorage)
+const STORAGE = 'control-frio-tia-v3';
+let state = { products: [], history: [] };
 
-// ---- Tabs inferior ----
-document.querySelectorAll('.tab').forEach(t=>{
-  t.addEventListener('click',()=>{
-    document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
-    t.classList.add('active');
-    if(t.dataset.tab==='products'){document.getElementById('view-products').style.display='block';document.getElementById('view-history').style.display='none';}
-    else{document.getElementById('view-products').style.display='none';document.getElementById('view-history').style.display='block';}
+function loadState(){
+  try{
+    const raw = localStorage.getItem(STORAGE);
+    if(raw) state = JSON.parse(raw);
+  }catch(e){ console.warn('loadState error', e); }
+}
+function saveState(){ localStorage.setItem(STORAGE, JSON.stringify(state)); }
+
+/* ------- DOM elements ------- */
+const groupCad = document.getElementById('group-caducados');
+const groupProx = document.getElementById('group-proximos');
+const groupVig = document.getElementById('group-vigentes');
+const historyList = document.getElementById('historyList');
+const mainScroll = document.getElementById('mainScroll');
+
+const modal = document.getElementById('modal');
+const btnAdd = document.getElementById('btnAdd');
+const cancelBtn = document.getElementById('cancelBtn');
+const saveBtn = document.getElementById('saveBtn');
+const backToProducts = document.getElementById('backToProducts');
+const historyView = document.getElementById('historyView');
+
+const fName = document.getElementById('fName');
+const fBarcode = document.getElementById('fBarcode');
+const fCategory = document.getElementById('fCategory');
+const fMade = document.getElementById('fMade');
+const fExpires = document.getElementById('fExpires');
+const daysLeft = document.getElementById('daysLeft');
+
+const reader = document.getElementById('reader');
+const btnScan = document.getElementById('btnScan');
+
+const searchInput = document.getElementById('search');
+const filterChips = document.querySelectorAll('.filter-chip');
+
+const tabProducts = document.getElementById('tabProducts');
+const tabHistory = document.getElementById('tabHistory');
+
+/* ------- Status compute ------- */
+function computeStatus(p){
+  if(p.retired) return {label:'Retirado', cls:'gray'};
+  if(!p.expiresAt) return {label:'Sin fecha', cls:'yellow'};
+  const today = new Date();
+  const exp = new Date(p.expiresAt);
+  const d = daysBetween(today, exp);
+  if(d < 0) return {label:`Caducado (${Math.abs(d)}d)`, cls:'red'};
+  const cat = CATEGORIES[p.category] || {alertDays:1};
+  if(d <= cat.alertDays) return {label:`Próximo (${d}d)`, cls:'yellow'};
+  return {label:`Vigente (${d}d)`, cls:'green'};
+}
+
+/* ------- Render ------- */
+function render(){
+  // clear groups
+  groupCad.innerHTML = '';
+  groupProx.innerHTML = '';
+  groupVig.innerHTML = '';
+  historyList.innerHTML = '';
+
+  const q = searchInput.value.trim().toLowerCase();
+  const activeFilter = document.querySelector('.filter-chip.active')?.dataset.filter || 'all';
+
+  // Build arrays with priority: caducados -> proximos -> vigentes
+  const cad = [], prox = [], vig = [];
+  state.products.forEach(p=>{
+    if(activeFilter !== 'all' && p.category !== activeFilter) return;
+    if(q && !(p.name.toLowerCase().includes(q) || (p.barcode||'').toLowerCase().includes(q))) return;
+    const st = computeStatus(p);
+    const card = createProductCard(p, st);
+    if(st.cls === 'red') cad.push(card);
+    else if(st.cls === 'yellow') prox.push(card);
+    else vig.push(card);
+  });
+
+  // Append in that order
+  cad.forEach(c => groupCad.appendChild(c));
+  prox.forEach(c => groupProx.appendChild(c));
+  vig.forEach(c => groupVig.appendChild(c));
+
+  // History (most recent first)
+  state.history.slice().reverse().forEach(h=>{
+    const el = document.createElement('div'); el.className='history-card';
+    el.innerHTML = `<div class="history-left"><div style="font-weight:700">${escapeHtml(h.name)}</div><div class="small-muted">${CATEGORIES[h.category]?.label||h.category}</div></div>
+                    <div class="small-muted">${new Date(h.retiredAt).toLocaleString()}</div>`;
+    historyList.appendChild(el);
+  });
+
+  // if no items, show hint
+  if(!groupCad.hasChildNodes()) groupCad.innerHTML = `<div class="hint small-muted">No hay productos caducados</div>`;
+  if(!groupProx.hasChildNodes()) groupProx.innerHTML = `<div class="hint small-muted">No hay productos próximos</div>`;
+  if(!groupVig.hasChildNodes()) groupVig.innerHTML = `<div class="hint small-muted">No hay productos vigentes</div>`;
+  if(!historyList.hasChildNodes()) historyList.innerHTML = `<div class="hint small-muted">Aún no hay historial de retirados</div>`;
+}
+
+/* ------- Helpers ------- */
+function escapeHtml(s){ return (''+s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+function createProductCard(p, st){
+  const card = document.createElement('div');
+  card.className = 'product-card ' + (st.cls === 'red' ? 'caducado' : st.cls === 'yellow' ? 'proximo' : 'vigente');
+
+  const left = document.createElement('div'); left.className = 'product-left';
+  left.innerHTML = `<div class="product-name">${escapeHtml(p.name)}</div>
+    <div class="product-meta">${escapeHtml(CATEGORIES[p.category]?.label || p.category)} • Caduca: ${p.expiresAt? new Date(p.expiresAt).toLocaleDateString() : '—'}</div>
+    ${p.barcode? `<div class="product-code">CB: ${escapeHtml(p.barcode)}</div>` : '' }
+    ${p.madeAt? `<div class="product-meta">Elaboración: ${new Date(p.madeAt).toLocaleDateString()}</div>` : '' }`;
+
+  const actions = document.createElement('div'); actions.className = 'product-actions';
+  const badge = document.createElement('div'); badge.className = 'badge ' + (st.cls === 'red' ? 'red' : st.cls === 'yellow' ? 'yellow' : 'green'); badge.textContent = st.label;
+
+  actions.appendChild(badge);
+
+  if(!p.retired){
+    const btn = document.createElement('button');
+    btn.className = 'btn-action';
+    btn.textContent = 'Retirar';
+    btn.onclick = () => {
+      p.retired = true;
+      state.history.push({...p, retiredAt: new Date().toISOString()});
+      saveState();
+      render();
+      // subtle scroll to top of main content so user sees updated lists
+      mainScroll.scrollTo({top:0, behavior:'smooth'});
+    };
+    actions.appendChild(btn);
+  } else {
+    const info = document.createElement('div'); info.className='small-muted'; info.textContent = 'Retirado';
+    actions.appendChild(info);
+  }
+
+  card.appendChild(left);
+  card.appendChild(actions);
+  return card;
+}
+
+/* ------- Events: filters & search ------- */
+filterChips.forEach(chip => {
+  chip.addEventListener('click', () => {
+    filterChips.forEach(c => c.classList.remove('active'));
+    chip.classList.add('active');
+    render();
+    mainScroll.scrollTo({top:0, behavior:'smooth'});
   });
 });
+searchInput.addEventListener('input', () => render());
 
-// ---- Lector código ----
-let scanner;
-document.getElementById('btnScan').addEventListener('click',()=>{
-  const reader=document.getElementById('reader');
-  if(reader.style.display==='none'){
-    reader.style.display='block';
-    scanner=new Html5Qrcode("reader");
-    Html5Qrcode.getCameras().then(cameras=>{if(cameras.length){scanner.start(cameras[0].id,{fps:10,qrbox:250},text=>{document.getElementById('fBarcode').value=text;scanner.stop();reader.style.display='none';});}}).catch(err=>console.error(err));
-  }else{scanner.stop();reader.style.display='none';}
+/* ------- Modal open/close and form behavior ------- */
+btnAdd.addEventListener('click', () => {
+  modal.classList.add('show');
+  modal.setAttribute('aria-hidden','false');
+  // reset form & focus
+  fName.value=''; fBarcode.value=''; fCategory.value='lacteos'; fMade.value=''; fExpires.value='';
+  daysLeft.textContent = '— días';
+  setTimeout(()=>fName.focus(), 250);
 });
 
-// ---- Inicializar ----
-loadState();render();
+cancelBtn.addEventListener('click', () => {
+  closeModal();
+});
+
+function closeModal(){
+  stopScannerIfActive();
+  modal.classList.remove('show');
+  modal.setAttribute('aria-hidden','true');
+}
+
+/* update daysLeft when expires changes */
+fExpires.addEventListener('change', ()=>{
+  const v = fExpires.value;
+  if(!v){ daysLeft.textContent = '— días'; return; }
+  const d = daysBetween(new Date(), new Date(v));
+  daysLeft.textContent = d + ' día(s)';
+});
+
+/* save product */
+saveBtn.addEventListener('click', ()=>{
+  const name = fName.value.trim();
+  const barcode = fBarcode.value.trim();
+  const category = fCategory.value;
+  const madeAt = fMade.value || null;
+  const expiresAt = fExpires.value || null;
+  if(!name || !expiresAt) return alert('Completa el nombre y la fecha de caducidad.');
+  const product = { id: uid(), name, barcode, category, madeAt, expiresAt, retired: false };
+  state.products.push(product);
+  saveState();
+  render();
+  closeModal();
+});
+
+/* ------- Tabs: products <-> history ------- */
+tabProducts.addEventListener('click', ()=>{ showProducts(); });
+tabHistory.addEventListener('click', ()=>{ showHistory(); });
+backToProducts?.addEventListener('click', ()=>{ showProducts(); });
+
+function showProducts(){
+  document.querySelector('.app').style.display = 'block';
+  historyView.style.display = 'none';
+  tabProducts.classList.add('active'); tabHistory.classList.remove('active');
+  // ensure mainScroll visible and scroll top for clarity
+  mainScroll.scrollTo({top:0, behavior:'smooth'});
+}
+function showHistory(){
+  document.querySelector('.app').style.display = 'none';
+  historyView.style.display = 'block';
+  tabHistory.classList.add('active'); tabProducts.classList.remove('active');
+}
+
+/* ------- Barcode scanner (html5-qrcode) ------- */
+let html5Scanner = null;
+let scannerActive = false;
+
+function stopScannerIfActive(){
+  const r = reader;
+  if(html5Scanner && scannerActive){
+    html5Scanner.stop().then(()=> {
+      try{ html5Scanner.clear(); }catch(e){}
+      reader.style.display='none';
+      scannerActive = false;
+    }).catch(()=>{ reader.style.display='none'; scannerActive = false; });
+  } else {
+    reader.style.display='none';
+    scannerActive = false;
+  }
+}
+
+btnScan.addEventListener('click', async () => {
+  // toggle
+  if(scannerActive){
+    stopScannerIfActive();
+    return;
+  }
+  // start
+  reader.style.display = 'block';
+  document.getElementById('reader').innerHTML = ''; // clear container
+  try{
+    html5Scanner = new Html5Qrcode("reader", { verbose: false });
+    const devices = await Html5Qrcode.getCameras();
+    if(!devices || devices.length === 0) {
+      alert('No se encontró cámara. Usa el campo manualmente.');
+      reader.style.display='none';
+      return;
+    }
+    const cameraId = devices[0].id;
+    scannerActive = true;
+    await html5Scanner.start(
+      cameraId,
+      { fps: 10, qrbox: { width: 250, height: 150 } },
+      (decodedText, decodedResult) => {
+        // decodedText is string from barcode/QR
+        fBarcode.value = decodedText;
+        // stop scanner
+        stopScannerIfActive();
+      },
+      (errorMessage) => {
+        // ignore continuous scan errors
+      }
+    );
+  }catch(err){
+    console.error('Scanner error', err);
+    alert('Error al activar la cámara. Verifica permisos y que el navegador permita usar la cámara.');
+    reader.style.display='none';
+    scannerActive = false;
+  }
+});
+
+/* ------- Utilities & init ------- */
+function seedIfEmpty(){
+  if(state.products.length === 0){
+    const now = Date.now();
+    state.products.push({ id:uid(), name:'Queso Mozzarella 1kg', barcode:'123456789012', category:'lacteos', madeAt:'2025-10-01', expiresAt: new Date(now + 1*24*60*60*1000).toISOString().slice(0,10), retired:false }); // próximo/caduca
+    state.products.push({ id:uid(), name:'Jamón cocido 250g', barcode:'987654321098', category:'embutidos', madeAt:'2025-09-25', expiresAt: new Date(now - 1*24*60*60*1000).toISOString().slice(0,10), retired:false }); // caducado
+    state.products.push({ id:uid(), name:'Filet de pollo 1kg', barcode:'555111222333', category:'carnes', madeAt:'2025-10-02', expiresAt: new Date(now + 7*24*60*60*1000).toISOString().slice(0,10), retired:false }); // vigente
+    saveState();
+  }
+}
+
+// helper to escape html used above
+// initialize
+loadState();
+seedIfEmpty();
+render();
+showProducts();
+
+/* close scanner before leaving page */
+window.addEventListener('beforeunload', ()=>{
+  if(html5Scanner && scannerActive){ try{ html5Scanner.stop(); }catch(e){} }
+});
+
 </script>
 </body>
 </html>
