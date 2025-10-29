@@ -1,280 +1,181 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Control Frío TÍA — Móvil Pro</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Control Frío TÍA - Modelo Profesional</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
-:root{
-  --bg:#ffffff; --muted:#6b7280; --accent:#0f172a;
-  --success:#16a34a; --warning:#f59e0b; --danger:#ef4444;
-  --shadow:0 4px 12px rgba(0,0,0,0.08);
-  --radius:12px;
-  font-family:Inter,ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial;
-}
-*{box-sizing:border-box}
-body{margin:0;padding:0;background:var(--bg);color:var(--accent);line-height:1.4}
-.app{max-width:600px;margin:0 auto;padding:10px}
-
-/* ===== Header ===== */
-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
-.logo{width:50px;height:50px;background:linear-gradient(135deg,#ef4444,#ffffff);border-radius:12px;color:white;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:18px;box-shadow:var(--shadow)}
-h1{font-size:18px;margin:0}
-.lead{font-size:12px;color:var(--muted);margin:0}
-
-/* ===== Cards ===== */
-.card{background:#fff;border-radius:var(--radius);padding:12px;margin-bottom:10px;box-shadow:var(--shadow)}
-.card .title{font-weight:600;margin-bottom:6px}
-.card .muted-sm{font-size:12px;color:var(--muted)}
-.card-grid{display:grid;grid-template-columns:1fr;gap:8px}
-
-/* ===== Chips ===== */
-.chip{padding:6px 10px;border-radius:999px;background:#f3f4f6;font-size:13px;color:var(--accent);border:1px solid #e6e6e6;cursor:pointer;transition:all 0.2s}
-.chip:hover{background:#ef4444;color:#fff;border-color:#ef4444}
-.chip.active{background:#ef4444;color:#fff;border-color:#ef4444}
-
-/* ===== Botones ===== */
-.btn{display:inline-flex;align-items:center;justify-content:center;padding:10px 14px;border-radius:12px;border:0;cursor:pointer;font-size:14px;transition:all 0.2s;box-shadow:var(--shadow)}
-.btn-primary{background:#ef4444;color:white;font-weight:600}
-.btn-primary:hover{background:#dc2626}
-.btn-ghost{background:#fff;border:1px solid #ef4444;color:#ef4444;font-weight:600}
-.btn-ghost:hover{background:#ef4444;color:#fff}
-.btn-small{padding:6px 10px;font-size:13px}
-
-/* ===== Listados profesionales ===== */
-.product-card{border-radius:12px;padding:12px;margin-bottom:8px;box-shadow:var(--shadow);display:flex;justify-content:space-between;align-items:center}
-.product-info{display:flex;flex-direction:column;gap:4px}
-.badge{padding:4px 8px;border-radius:8px;font-size:12px;color:white;white-space:nowrap}
-.green{background:var(--success)}
-.yellow{background:var(--warning)}
-.red{background:var(--danger)}
-.gray{background:#9ca3af}
-
-/* ===== Modal ===== */
-#modal{position:fixed;inset:0;background:rgba(0,0,0,0.6);display:none;align-items:center;justify-content:center;padding:10px}
-#modal.show{display:flex}
-#modal .card{width:100%;max-width:500px}
-#reader{width:100%;margin-top:8px;display:none}
-
-/* ===== Tabs Historial ===== */
-.tabs{display:flex;gap:6px;margin-bottom:6px}
-.tab{flex:1;padding:8px;text-align:center;border-radius:12px;border:1px solid #e6e6e6;cursor:pointer;transition:all 0.2s}
-.tab.active{background:#ef4444;color:white;border-color:#ef4444}
-.history-card{border-radius:12px;padding:10px;margin-bottom:6px;box-shadow:var(--shadow);background:#f9fafb}
+  :root{
+    --bg:#fff; --text:#0f172a; --muted:#6b7280;
+    --green:#16a34a; --yellow:#f59e0b; --red:#ef4444;
+    --primary:#dc2626; --shadow:0 6px 18px rgba(2,6,23,0.08); --radius:14px;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;font-family:Inter,sans-serif;background:var(--bg);color:var(--text);}
+  .app{max-width:500px;margin:auto;padding:12px;}
+  h1,h2,h3{margin:0;}
+  .header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;}
+  .header .logo{font-weight:700;font-size:22px;color:white;background:var(--primary);padding:10px 16px;border-radius:12px;box-shadow:var(--shadow);}
+  .btn{padding:10px 16px;border:none;border-radius:12px;font-weight:600;font-size:16px;cursor:pointer;}
+  .btn-primary{background:var(--primary);color:white;}
+  .btn-ghost{background:#f3f4f6;color:var(--text);}
+  .chip{padding:8px 12px;border-radius:20px;background:#f3f4f6;font-size:14px;cursor:pointer;display:inline-block;margin:4px;}
+  .chip.active{background:var(--primary);color:white;}
+  .card{background:#fff;border-radius:var(--radius);padding:12px;margin-bottom:12px;box-shadow:var(--shadow);}
+  .product-card{display:flex;justify-content:space-between;align-items:center;padding:12px;border-radius:var(--radius);box-shadow:var(--shadow);margin-bottom:10px;}
+  .product-info{flex:1;margin-right:10px;}
+  .badge{padding:6px 10px;border-radius:8px;color:white;font-weight:600;font-size:14px;text-align:center;}
+  .green{background:var(--green);}
+  .yellow{background:var(--yellow);}
+  .red{background:var(--red);}
+  .tab-bar{position:fixed;bottom:0;left:0;width:100%;display:flex;justify-content:space-around;padding:8px 0;background:#fff;box-shadow:0 -3px 10px rgba(0,0,0,0.1);}
+  .tab{flex:1;text-align:center;padding:10px;font-weight:600;cursor:pointer;}
+  .tab.active{color:var(--primary);}
+  #reader{width:100%;height:250px;background:#000;display:none;margin-bottom:12px;}
+  input, select{width:100%;padding:10px;border-radius:10px;border:1px solid #e6e6e6;margin-bottom:8px;font-size:14px;}
 </style>
 </head>
 <body>
 <div class="app">
-<header>
-<div class="logo">TÍA</div>
-<div>
-  <h1>Control Frío</h1>
-  <p class="lead">Gestión profesional de caducidad</p>
-</div>
-<button id="btnAdd" class="btn btn-primary btn-small">➕ Agregar</button>
-</header>
+  <div class="header">
+    <div class="logo">TÍA</div>
+    <button id="btnAdd" class="btn btn-primary">➕ Agregar</button>
+  </div>
 
-<div class="card">
-<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:6px">
-  <div class="chip active" data-filter="all">Todas</div>
-  <div class="chip" data-filter="lacteos">Lácteos</div>
-  <div class="chip" data-filter="embutidos">Embutidos</div>
-  <div class="chip" data-filter="carnes">Carnes</div>
-  <div class="chip" data-filter="fruver">Fruver</div>
-  <div class="chip" data-filter="congelados">Congelados</div>
-</div>
-<input id="search" type="text" placeholder="Buscar producto o código" style="margin-bottom:8px"/>
-<button id="btnSearch" class="btn btn-ghost btn-small">Buscar</button>
+  <!-- Filtros y búsqueda -->
+  <div class="card" id="filtersCard">
+    <div>
+      <span class="chip active" data-filter="all">Todos</span>
+      <span class="chip" data-filter="lacteos">Lácteos</span>
+      <span class="chip" data-filter="embutidos">Embutidos</span>
+      <span class="chip" data-filter="carnes">Carnes</span>
+      <span class="chip" data-filter="fruver">Fruver</span>
+      <span class="chip" data-filter="congelados">Congelados</span>
+    </div>
+    <input id="search" type="text" placeholder="Buscar nombre o código">
+  </div>
+
+  <!-- Listado productos -->
+  <div id="view-products">
+    <h2>Vigentes</h2>
+    <div id="list-vigentes"></div>
+    <h2>Próximos</h2>
+    <div id="list-proximos"></div>
+    <h2>Caducados</h2>
+    <div id="list-caducados"></div>
+  </div>
+
+  <!-- Historial -->
+  <div id="view-history" style="display:none;">
+    <h2>Historial de retirados</h2>
+    <div id="history-list"></div>
+  </div>
+
+  <!-- Modal agregar producto -->
+  <div id="modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;padding:12px;">
+    <div class="card" style="width:100%;">
+      <h3>Agregar producto</h3>
+      <input id="fName" type="text" placeholder="Nombre" required>
+      <input id="fBarcode" type="text" placeholder="Código de barras">
+      <button id="btnScan" class="btn btn-primary">📷 Escanear código</button>
+      <div id="reader"></div>
+      <select id="fCategory">
+        <option value="lacteos">Lácteos</option>
+        <option value="embutidos">Embutidos</option>
+        <option value="carnes">Carnes</option>
+        <option value="fruver">Fruver</option>
+        <option value="congelados">Congelados</option>
+      </select>
+      <input id="fMade" type="date" placeholder="Fecha elaboración">
+      <input id="fExpires" type="date" placeholder="Fecha caducidad" required>
+      <button id="saveProduct" class="btn btn-primary">Guardar</button>
+      <button id="btnCancel" class="btn btn-ghost">Cancelar</button>
+    </div>
+  </div>
+
 </div>
 
-<!-- Contenedores separados por estado -->
-<div id="products-vigentes" class="card">
-  <div class="title">🟢 Vigentes</div>
-  <div id="list-vigentes" class="card-grid"></div>
-</div>
-
-<div id="products-proximos" class="card">
-  <div class="title">🟡 Próximos a caducar</div>
-  <div id="list-proximos" class="card-grid"></div>
-</div>
-
-<div id="products-caducados" class="card">
-  <div class="title">🔴 Caducados</div>
-  <div id="list-caducados" class="card-grid"></div>
-</div>
-
-<!-- Historial como pestaña -->
-<div class="card">
-<div class="tabs">
+<!-- Pestaña inferior -->
+<div class="tab-bar">
   <div class="tab active" data-tab="products">Productos</div>
   <div class="tab" data-tab="history">Historial</div>
 </div>
-<div id="tab-content">
-  <div id="history-list" style="display:none"></div>
-</div>
-</div>
 
-</div>
-
-<!-- Modal Agregar Producto -->
-<div id="modal">
-<div class="card">
-<div style="display:flex;justify-content:space-between;align-items:center">
-<h3>Agregar producto</h3>
-<button id="closeModal" class="btn btn-ghost btn-small">✖</button>
-</div>
-<form id="form" style="margin-top:10px;display:flex;flex-direction:column;gap:8px">
-<label>Nombre</label>
-<input id="fName" type="text" placeholder="Queso Mozzarella" required/>
-<label>Código de barras</label>
-<input id="fBarcode" type="text" placeholder="Opcional"/>
-<button type="button" id="btnScan" class="btn btn-primary btn-small">📷 Escanear</button>
-<div id="reader"></div>
-<label>Categoría</label>
-<select id="fCategory">
-<option value="lacteos">Lácteos</option>
-<option value="embutidos">Embutidos</option>
-<option value="carnes">Carnes</option>
-<option value="fruver">Fruver</option>
-<option value="congelados">Congelados</option>
-</select>
-<label>Fecha elaboración</label>
-<input id="fMade" type="date"/>
-<label>Fecha caducidad</label>
-<input id="fExpires" type="date" required/>
-<div style="display:flex;justify-content:space-between;align-items:center">
-<span class="muted-sm">Días hasta caducidad: <strong id="daysLeft">—</strong></span>
-<div style="display:flex;gap:4px">
-<button type="submit" class="btn btn-primary btn-small">Guardar</button>
-<button type="button" id="btnCancel" class="btn btn-ghost btn-small">Cancelar</button>
-</div>
-</div>
-</form>
-</div>
-</div>
-
-<script src="https://unpkg.com/html5-qrcode"></script>
+<script src="https://unpkg.com/html5-qrcode@2.3.7/minified/html5-qrcode.min.js"></script>
 <script>
-// ----- Datos -----
-const CATEGORIES={lacteos:{label:'Lácteos',alertDays:2},embutidos:{label:'Embutidos',alertDays:1},carnes:{label:'Carnes',alertDays:2},fruver:{label:'Fruver',alertDays:1},congelados:{label:'Congelados',alertDays:1}};
-function daysBetween(a,b){return Math.ceil((Date.UTC(b.getFullYear(),b.getMonth(),b.getDate())-Date.UTC(a.getFullYear(),a.getMonth(),a.getDate()))/(24*60*60*1000));}
-function uid(){return 'p_'+Math.random().toString(36).slice(2,9);}
-
-// ----- Estado -----
+// ---- Datos iniciales ----
+const CATEGORIES = {lacteos:{label:'Lácteos', alertDays:2}, embutidos:{label:'Embutidos', alertDays:1}, carnes:{label:'Carnes', alertDays:2}, fruver:{label:'Fruver', alertDays:1}, congelados:{label:'Congelados', alertDays:1}};
 let state={products:[],history:[]};
 const STORAGE_KEY='control-frio-tia-v2';
 function loadState(){try{const raw=localStorage.getItem(STORAGE_KEY);if(raw)state=JSON.parse(raw);}catch(e){console.warn(e);}}
 function saveState(){localStorage.setItem(STORAGE_KEY,JSON.stringify(state));}
 
-// ----- Render -----
-function computeStatus(p){
-if(p.retired)return {label:'Retirado',cls:'gray'};
-if(!p.expiresAt)return {label:'Sin fecha',cls:'gray'};
-const today=new Date(),exp=new Date(p.expiresAt),days=daysBetween(today,exp);
-if(days<0)return {label:`Caducado (${Math.abs(days)}d)`,cls:'red'};
-const cat=CATEGORIES[p.category]||{alertDays:1};
-if(days<=cat.alertDays)return {label:`Próximo (${days}d)`,cls:'yellow'};
-return {label:`Vigente (${days}d)`,cls:'green'};
-}
+// ---- Utils ----
+function uid(){return 'p_'+Math.random().toString(36).slice(2,9);}
+function daysBetween(a,b){const ms=24*60*60*1000;return Math.ceil((Date.UTC(b.getFullYear(),b.getMonth(),b.getDate())-Date.UTC(a.getFullYear(),a.getMonth(),a.getDate()))/ms);}
+function computeStatus(p){if(p.retired)return {label:'Retirado',cls:'red'};if(!p.expiresAt)return {label:'Sin fecha',cls:'yellow'};const d=daysBetween(new Date(),new Date(p.expiresAt));if(d<0)return {label:`Caducado (${Math.abs(d)}d)`,cls:'red'};if(d<=CATEGORIES[p.category]?.alertDays)return {label:`Próximo (${d}d)`,cls:'yellow'};return {label:`Vigente (${d}d)`,cls:'green'};}
 
+// ---- Render ----
 function render(){
   const q=document.getElementById('search').value.trim().toLowerCase();
   const activeFilter=document.querySelector('.chip.active')?.dataset.filter||'all';
   const vigentes=[],proximos=[],caducados=[];
   state.products.forEach(p=>{
-    if(activeFilter!=='all' && p.category!==activeFilter) return;
-    if(q && !(p.name.toLowerCase().includes(q) || (p.barcode||'').toLowerCase().includes(q))) return;
+    if(activeFilter!=='all' && p.category!==activeFilter)return;
+    if(q && !(p.name.toLowerCase().includes(q)||(p.barcode||'').toLowerCase().includes(q)))return;
     const st=computeStatus(p);
     const card=document.createElement('div'); card.className='product-card';
-    card.innerHTML=`<div class="product-info">
-      <div style="font-weight:600">${p.name}</div>
-      <div class="muted-sm">${CATEGORIES[p.category]?.label||p.category} • Caduca: ${p.expiresAt?new Date(p.expiresAt).toLocaleDateString():'—'}</div>
-      ${p.barcode?'<div class="muted-sm">CB: '+p.barcode+'</div>':''}
-    </div>
-    <div style="display:flex;flex-direction:column;gap:4px">
-      <div class="badge ${st.cls}">${st.label}</div>
-      ${!p.retired?'<button class="btn btn-ghost btn-small">Retirar</button>':''}
-    </div>`;
-    if(!p.retired)card.querySelector('button').onclick=()=>retireProduct(p.id);
-    if(st.cls==='green') vigentes.push(card);
-    else if(st.cls==='yellow') proximos.push(card);
-    else caducados.push(card);
+    card.innerHTML=`<div class="product-info"><div style="font-weight:600">${p.name}</div><div>${CATEGORIES[p.category]?.label||p.category} • Caduca: ${p.expiresAt?new Date(p.expiresAt).toLocaleDateString():'—'}</div>${p.barcode?`<div>CB: ${p.barcode}</div>`:''}</div>`;
+    const badge=document.createElement('div'); badge.className='badge '+st.cls; badge.textContent=st.label;
+    card.appendChild(badge);
+    if(!p.retired){const btn=document.createElement('button');btn.className='btn btn-ghost';btn.textContent='Retirar';btn.onclick=()=>{p.retired=true;state.history.push({...p,retiredAt:new Date().toISOString()});saveState();render();};card.appendChild(btn);}
+    if(st.cls==='green')vigentes.push(card); else if(st.cls==='yellow')proximos.push(card); else caducados.push(card);
   });
   const lv=document.getElementById('list-vigentes'),lp=document.getElementById('list-proximos'),lc=document.getElementById('list-caducados');
   lv.innerHTML='';lp.innerHTML='';lc.innerHTML='';
   vigentes.forEach(c=>lv.appendChild(c));
   proximos.forEach(c=>lp.appendChild(c));
   caducados.forEach(c=>lc.appendChild(c));
-
-  // Historial
-  const hList=document.getElementById('history-list'); hList.innerHTML='';
-  state.history.slice().reverse().forEach(h=>{
-    const hc=document.createElement('div'); hc.className='history-card';
-    hc.innerHTML=`<strong>${h.name}</strong> • ${CATEGORIES[h.category]?.label||h.category}<br>Retirado: ${new Date(h.retiredAt).toLocaleString()}`;
-    hList.appendChild(hc);
-  });
+  // historial
+  const hist=document.getElementById('history-list'); hist.innerHTML='';
+  state.history.slice().reverse().forEach(h=>{const c=document.createElement('div');c.className='card';c.innerHTML=`<div style="font-weight:600">${h.name}</div><div>${CATEGORIES[h.category]?.label||h.category} • Retirado: ${new Date(h.retiredAt).toLocaleString()}</div>`;hist.appendChild(c);});
 }
+document.querySelectorAll('.chip').forEach(el=>el.addEventListener('click',()=>{document.querySelectorAll('.chip').forEach(x=>x.classList.remove('active'));el.classList.add('active');render();}));
+document.getElementById('search').addEventListener('input',render);
 
-// ----- Funciones -----
-function addProduct(data){data.id=uid();data.retired=false;state.products.push(data);saveState();render();}
-function retireProduct(id){const idx=state.products.findIndex(p=>p.id===id);if(idx===-1)return;const p=state.products[idx];p.retired=true;state.history.push({...p,retiredAt:new Date().toISOString()});saveState();render();}
-
-// ----- Modal -----
+// ---- Modal agregar producto ----
 const modal=document.getElementById('modal');
-document.getElementById('btnAdd').addEventListener('click',()=>{modal.classList.add('show');document.getElementById('fName').focus();});
-document.getElementById('closeModal').addEventListener('click',()=>modal.classList.remove('show'));
-document.getElementById('btnCancel').addEventListener('click',()=>modal.classList.remove('show'));
-document.getElementById('form').addEventListener('submit',(e)=>{
-  e.preventDefault();
+document.getElementById('btnAdd').addEventListener('click',()=>modal.style.display='flex');
+document.getElementById('btnCancel').addEventListener('click',()=>{modal.style.display='none';document.getElementById('fName').value='';document.getElementById('fBarcode').value='';});
+document.getElementById('saveProduct').addEventListener('click',()=>{
   const data={name:document.getElementById('fName').value.trim(),barcode:document.getElementById('fBarcode').value.trim(),category:document.getElementById('fCategory').value,madeAt:document.getElementById('fMade').value||null,expiresAt:document.getElementById('fExpires').value};
-  if(!data.name||!data.expiresAt)return alert('Completa nombre y fecha');
-  addProduct(data); modal.classList.remove('show'); e.target.reset(); document.getElementById('daysLeft').textContent='—';
+  if(!data.name||!data.expiresAt)return alert('Completa nombre y fecha');data.id=uid();data.retired=false;state.products.push(data);saveState();render();modal.style.display='none';
 });
-document.getElementById('fExpires').addEventListener('change',()=>{const v=document.getElementById('fExpires').value;if(!v){document.getElementById('daysLeft').textContent='—';return;}document.getElementById('daysLeft').textContent=daysBetween(new Date(),new Date(v))+' día(s)';});
-modal.addEventListener('click',(e)=>{if(e.target===modal)modal.classList.remove('show');});
 
-// ----- Filtros -----
-document.querySelectorAll('.chip').forEach(el=>{el.addEventListener('click',()=>{document.querySelectorAll('.chip').forEach(x=>x.classList.remove('active'));el.classList.add('active');render();});});
-document.getElementById('btnSearch').addEventListener('click',render);
-
-// ----- Tabs historial -----
+// ---- Tabs inferior ----
 document.querySelectorAll('.tab').forEach(t=>{
   t.addEventListener('click',()=>{
     document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
     t.classList.add('active');
-    if(t.dataset.tab==='history'){document.getElementById('history-list').style.display='block';}else{document.getElementById('history-list').style.display='none';}
+    if(t.dataset.tab==='products'){document.getElementById('view-products').style.display='block';document.getElementById('view-history').style.display='none';}
+    else{document.getElementById('view-products').style.display='none';document.getElementById('view-history').style.display='block';}
   });
 });
 
-// ----- Lector de código -----
-const btnScan=document.getElementById('btnScan');
-const reader=document.getElementById('reader');
-let html5QrcodeScanner;
-btnScan.addEventListener('click',()=>{
+// ---- Lector código ----
+let scanner;
+document.getElementById('btnScan').addEventListener('click',()=>{
+  const reader=document.getElementById('reader');
   if(reader.style.display==='none'){
     reader.style.display='block';
-    html5QrcodeScanner=new Html5Qrcode("reader");
-    Html5Qrcode.getCameras().then(cameras=>{
-      if(cameras && cameras.length){
-        const cameraId=cameras[0].id;
-        html5QrcodeScanner.start(cameraId,{fps:10,qrbox:250},(decodedText)=>{
-          document.getElementById('fBarcode').value=decodedText;
-          html5QrcodeScanner.stop();
-          reader.style.display='none';
-        },(err)=>{}).catch(err=>console.error(err));
-      }
-    }).catch(err=>console.error(err));
-  } else {html5QrcodeScanner.stop(); reader.style.display='none';}
+    scanner=new Html5Qrcode("reader");
+    Html5Qrcode.getCameras().then(cameras=>{if(cameras.length){scanner.start(cameras[0].id,{fps:10,qrbox:250},text=>{document.getElementById('fBarcode').value=text;scanner.stop();reader.style.display='none';});}}).catch(err=>console.error(err));
+  }else{scanner.stop();reader.style.display='none';}
 });
 
-// ----- Inicializar -----
-loadState(); 
-if(state.products.length===0){
-  addProduct({name:'Queso Mozzarella',barcode:'123456789012',category:'lacteos',madeAt:'2025-10-01',expiresAt:new Date(Date.now()+2*24*60*60*1000).toISOString().slice(0,10)});
-  addProduct({name:'Jamón cocido',barcode:'987654321098',category:'embutidos',madeAt:'2025-09-25',expiresAt:new Date(Date.now()+1*24*60*60*1000).toISOString().slice(0,10)});
-  addProduct({name:'Filet de pollo',barcode:'555111222333',category:'carnes',madeAt:'2025-10-02',expiresAt:new Date(Date.now()+5*24*60*60*1000).toISOString().slice(0,10)});
-}
-render();
+// ---- Inicializar ----
+loadState();render();
 </script>
 </body>
 </html>
