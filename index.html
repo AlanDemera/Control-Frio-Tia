@@ -3,9 +3,8 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Control Productos TÍA — Móvil Pro 3.0</title>
+<title>Control Productos TÍA — Demo</title>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
-<meta name="description" content="Control de productos TÍA — diseño móvil profesional, rojo/blanco, lector de códigos y pestaña historial.">
 <style>
   :root{
     --bg:#ffffff;
@@ -24,36 +23,31 @@
 
   *{box-sizing:border-box}
   html,body{height:100%;margin:0;background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased}
-  .app{max-width:540px;margin:0 auto;height:100vh;display:flex;flex-direction:column;padding:16px;gap:16px}
+  .app{max-width:540px;margin:0 auto;height:100vh;display:flex;flex-direction:column;padding:12px;gap:12px}
 
-  /* Header */
   .header{
-    display:flex;align-items:center;justify-content:space-between;gap:16px;
-    padding:14px;border-radius:12px;background:linear-gradient(90deg,var(--red),var(--red-600));
+    display:flex;align-items:center;justify-content:space-between;gap:12px;
+    padding:12px;border-radius:12px;background:linear-gradient(90deg,var(--red),var(--red-600));
     color:white;box-shadow:var(--shadow);
   }
   .brand{display:flex;flex-direction:column;gap:2px}
   .brand .title{font-size:18px;font-weight:700;letter-spacing:0.2px}
   .brand .subtitle{font-size:12px;opacity:0.95}
 
-  .btn-add{background:white;color:var(--red);border:none;padding:12px 16px;border-radius:12px;font-weight:700;font-size:15px;cursor:pointer;box-shadow:0 6px 18px rgba(0,0,0,0.08)}
+  .btn-add{background:white;color:var(--red);border:none;padding:10px 14px;border-radius:12px;font-weight:700;font-size:15px;cursor:pointer;box-shadow:0 6px 18px rgba(0,0,0,0.08)}
   .btn-add:active{transform:translateY(1px)}
 
-  /* Filters / categories */
-  .filters {display:flex;gap:12px;overflow-x:auto;padding-bottom:6px}
+  .filters {display:flex;gap:10px;overflow-x:auto;padding-bottom:4px}
   .filter-chip{
     flex:0 0 auto;
-    padding:10px 16px;border-radius:999px;border:2px solid var(--red);color:var(--red);background:transparent;font-weight:600;font-size:14px;cursor:pointer;white-space:nowrap;
+    padding:10px 14px;border-radius:999px;border:2px solid var(--red);color:var(--red);background:transparent;font-weight:600;font-size:14px;cursor:pointer;white-space:nowrap;
   }
   .filter-chip.active{background:var(--red);color:white;box-shadow:0 6px 18px rgba(209,52,52,0.12)}
 
-  /* Main scroll */
-  .main-scroll {flex:1;overflow:auto;padding-bottom:90px;display:flex;flex-direction:column;gap:16px;}
+  .main-scroll {flex:1;overflow:auto;padding-bottom:90px;display:flex;flex-direction:column;gap:14px;}
 
-  /* Section titles */
-  .section-title{font-size:16px;font-weight:700;margin:6px 0 10px 0;color:var(--muted);display:flex;align-items:center;gap:8px}
+  .section-title{font-size:16px;font-weight:700;margin:4px 0 8px 0;color:var(--muted);display:flex;align-items:center;gap:8px}
 
-  /* Product card */
   .product-card{
     background:var(--surface);border-radius:var(--card-radius);padding:14px;display:flex;justify-content:space-between;align-items:center;gap:12px;box-shadow:var(--shadow);
     border-left:6px solid transparent;
@@ -73,24 +67,20 @@
   .badge.yellow{background:var(--yellow);color:#222}
   .badge.green{background:var(--green)}
 
-  .btn-action{padding:10px 14px;border-radius:10px;border:none;background:var(--red);color:white;font-weight:700;font-size:14px;cursor:pointer}
+  .btn-action{padding:8px 12px;border-radius:10px;border:none;background:var(--red);color:white;font-weight:700;font-size:14px;cursor:pointer}
   .btn-action.ghost{background:transparent;border:2px solid var(--red);color:var(--red);font-weight:700}
 
-  .list-group{display:flex;flex-direction:column;gap:12px}
+  .list-group{display:flex;flex-direction:column;gap:10px}
 
-  /* Modal */
   .modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,0.55);display:none;align-items:center;justify-content:center;padding:18px;z-index:50}
   .modal-backdrop.show{display:flex}
-  .modal{width:100%;max-width:520px;background:white;border-radius:16px;padding:18px;box-shadow:0 20px 40px rgba(0,0,0,0.25)}
-  .modal h3{margin:0 0 12px 0;font-size:18px}
-  .form-field{display:flex;flex-direction:column;gap:6px;margin-bottom:12px}
+  .modal{width:100%;max-width:520px;background:white;border-radius:16px;padding:16px;box-shadow:0 20px 40px rgba(0,0,0,0.25)}
+  .modal h3{margin:0 0 8px 0;font-size:18px}
+  .form-field{display:flex;flex-direction:column;gap:6px;margin-bottom:8px}
   .input{padding:12px;border-radius:10px;border:1px solid #eee;font-size:15px}
   .input::placeholder{color:#9aa0a6}
   .hint{font-size:12px;color:var(--muted)}
 
-  #reader{width:100%;height:280px;background:#000;border-radius:10px;overflow:hidden;display:none}
-
-  /* Bottom tab */
   .tabbar{position:fixed;left:0;right:0;bottom:0;display:flex;justify-content:space-between;gap:12px;padding:12px;background:white;border-top:1px solid #f0f0f0}
   .tab-btn{flex:1;padding:12px;border-radius:12px;border:none;background:transparent;font-weight:700;font-size:16px;cursor:pointer}
   .tab-btn.active{background:linear-gradient(90deg,var(--red),var(--red-600));color:white;box-shadow:0 8px 20px rgba(209,52,52,0.12)}
@@ -103,20 +93,19 @@
     .app{padding:18px}
     .product-name{font-size:18px}
   }
+
 </style>
 </head>
 <body>
 <div class="app">
-  <!-- HEADER -->
   <div class="header">
     <div class="brand">
       <div class="title">Control Productos TÍA</div>
-      <div class="subtitle">Refrigerados — diseño profesional</div>
+      <div class="subtitle">Refrigerados — Demo Funcional</div>
     </div>
     <button id="btnAdd" class="btn-add">➕ Agregar</button>
   </div>
 
-  <!-- CATEGORIES + SEARCH -->
   <div>
     <div class="filters" id="filters">
       <button class="filter-chip active" data-filter="all">Todos</button>
@@ -127,23 +116,20 @@
       <button class="filter-chip" data-filter="congelados">❄️ Congelados</button>
     </div>
     <div style="margin-top:10px">
-      <input id="search" class="input" type="search" placeholder="Buscar por nombre o código (ej. 123456789012)">
-      <div class="hint" style="margin-top:6px">Los productos que estén <strong>caducados</strong> aparecen primero.</div>
+      <input id="search" class="input" type="search" placeholder="Buscar por nombre o código">
+      <div class="hint" style="margin-top:6px">Los productos caducados aparecen primero.</div>
     </div>
   </div>
 
-  <!-- MAIN SCROLL -->
   <div class="main-scroll" id="mainScroll">
     <section>
       <div class="section-title">🔴 A CADUCAR</div>
       <div id="group-caducados" class="list-group"></div>
     </section>
-
     <section>
-      <div class="section-title">🟡 PRÓXIMOS A CADUCAR</div>
+      <div class="section-title">🟡 PRÓXIMOS</div>
       <div id="group-proximos" class="list-group"></div>
     </section>
-
     <section>
       <div class="section-title">🟢 VIGENTES</div>
       <div id="group-vigentes" class="list-group"></div>
@@ -151,7 +137,6 @@
   </div>
 </div>
 
-<!-- HISTORY -->
 <div style="display:none" id="historyView">
   <div style="padding:14px">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
@@ -162,23 +147,13 @@
   </div>
 </div>
 
-<!-- MODAL -->
 <div class="modal-backdrop" id="modal">
   <div class="modal">
     <h3>Agregar producto</h3>
     <div class="form-field">
       <label class="hint">Nombre</label>
-      <input id="fName" class="input" type="text" placeholder="Ej. Leche entera Marca X 1L">
+      <input id="fName" class="input" type="text" placeholder="Ej. Leche entera 1L">
     </div>
-    <div class="form-field">
-      <label class="hint">Código de barras</label>
-      <div style="display:flex;gap:8px">
-        <input id="fBarcode" class="input" type="text" placeholder="123456789012">
-        <button id="btnScan" class="btn-action">📷</button>
-      </div>
-      <div class="hint">Pulsa el icono para escanear. Si no funciona, usa manual.</div>
-    </div>
-    <div id="reader"></div>
     <div class="form-field">
       <label class="hint">Categoría</label>
       <select id="fCategory" class="input">
@@ -190,32 +165,139 @@
       </select>
     </div>
     <div class="form-field">
-      <label class="hint">Fecha de elaboración (opcional)</label>
-      <input id="fMade" class="input" type="date">
-    </div>
-    <div class="form-field">
-      <label class="hint">Fecha de caducidad (obligatorio)</label>
+      <label class="hint">Fecha de caducidad</label>
       <input id="fExpires" class="input" type="date">
       <div class="small-muted" id="daysLeft">— días</div>
     </div>
-    <div style="display:flex;gap:12px;margin-top:10px">
-      <button id="saveBtn" class="btn-action" style="flex:1">Guardar producto</button>
+    <div style="display:flex;gap:10px;margin-top:10px">
+      <button id="saveBtn" class="btn-action" style="flex:1">Guardar</button>
       <button id="cancelBtn" class="btn-action ghost" style="flex:1">Cancelar</button>
     </div>
   </div>
 </div>
 
-<!-- TABBAR -->
 <div class="tabbar">
-  <button class="tab-btn active" id="tabProducts" data-view="products">Productos</button>
-  <button class="tab-btn" id="tabHistory" data-view="history">Historial</button>
+  <button class="tab-btn active" id="tabProducts">Productos</button>
+  <button class="tab-btn" id="tabHistory">Historial</button>
 </div>
 
-<script src="https://unpkg.com/html5-qrcode@2.3.7/minified/html5-qrcode.min.js"></script>
 <script>
-// Aquí iría todo el JS que ya tenías: loadState, render, modal, filtros, scanner, historial
-// Mantenemos la funcionalidad completa y el scroll / botones separados
+const CATEGORIES = {
+  lacteos:{label:'Lácteos', alertDays:2},
+  embutidos:{label:'Embutidos', alertDays:1},
+  carnes:{label:'Carnes', alertDays:2},
+  fruver:{label:'Fruver', alertDays:1},
+  congelados:{label:'Congelados', alertDays:1}
+};
 
+function daysBetween(a,b){return Math.ceil((Date.UTC(b.getFullYear(),b.getMonth(),b.getDate())-Date.UTC(a.getFullYear(),a.getMonth(),a.getDate()))/(24*60*60*1000));}
+function uid(){return 'p_'+Math.random().toString(36).slice(2,9);}
+
+let state = { products: [], history: [] };
+const STORAGE = 'demo-control-tia';
+if(localStorage.getItem(STORAGE)) state = JSON.parse(localStorage.getItem(STORAGE));
+
+const groupCad = document.getElementById('group-caducados');
+const groupProx = document.getElementById('group-proximos');
+const groupVig = document.getElementById('group-vigentes');
+const historyList = document.getElementById('historyList');
+const mainScroll = document.getElementById('mainScroll');
+
+const modal = document.getElementById('modal');
+const btnAdd = document.getElementById('btnAdd');
+const cancelBtn = document.getElementById('cancelBtn');
+const saveBtn = document.getElementById('saveBtn');
+const backToProducts = document.getElementById('backToProducts');
+const historyView = document.getElementById('historyView');
+
+const fName = document.getElementById('fName');
+const fCategory = document.getElementById('fCategory');
+const fExpires = document.getElementById('fExpires');
+const daysLeft = document.getElementById('daysLeft');
+
+const searchInput = document.getElementById('search');
+const filterChips = document.querySelectorAll('.filter-chip');
+const tabProducts = document.getElementById('tabProducts');
+const tabHistory = document.getElementById('tabHistory');
+
+function computeStatus(p){
+  const today=new Date();
+  const exp=new Date(p.expiresAt);
+  const d=daysBetween(today,exp);
+  const cat=CATEGORIES[p.category]||{alertDays:1};
+  if(d<0) return {label:`Caducado (${Math.abs(d)}d)`, cls:'red'};
+  if(d<=cat.alertDays) return {label:`Próximo (${d}d)`, cls:'yellow'};
+  return {label:`Vigente (${d}d)`, cls:'green'};
+}
+
+function render(){
+  groupCad.innerHTML=''; groupProx.innerHTML=''; groupVig.innerHTML=''; historyList.innerHTML='';
+  const q=searchInput.value.trim().toLowerCase();
+  const activeFilter=document.querySelector('.filter-chip.active')?.dataset.filter||'all';
+  const cad=[], prox=[], vig=[];
+  state.products.forEach(p=>{
+    if(activeFilter!=='all'&&p.category!==activeFilter) return;
+    if(q&&!(p.name.toLowerCase().includes(q))) return;
+    const st=computeStatus(p);
+    const card=createProductCard(p,st);
+    if(st.cls==='red') cad.push(card);
+    else if(st.cls==='yellow') prox.push(card);
+    else vig.push(card);
+  });
+  cad.forEach(c=>groupCad.appendChild(c));
+  prox.forEach(c=>groupProx.appendChild(c));
+  vig.forEach(c=>groupVig.appendChild(c));
+
+  state.history.slice().reverse().forEach(h=>{
+    const el=document.createElement('div'); el.className='history-card';
+    el.innerHTML=`<div class="history-left"><div style="font-weight:700">${h.name}</div><div class="small-muted">${CATEGORIES[h.category]?.label||h.category}</div></div>
+                  <div class="small-muted">${new Date(h.retiredAt).toLocaleString()}</div>`;
+    historyList.appendChild(el);
+  });
+
+  if(!groupCad.hasChildNodes()) groupCad.innerHTML=`<div class="hint small-muted">No hay productos caducados</div>`;
+  if(!groupProx.hasChildNodes()) groupProx.innerHTML=`<div class="hint small-muted">No hay próximos productos</div>`;
+  if(!groupVig.hasChildNodes()) groupVig.innerHTML=`<div class="hint small-muted">No hay productos vigentes</div>`;
+  if(!historyList.hasChildNodes()) historyList.innerHTML=`<div class="hint small-muted">Aún no hay historial</div>`;
+}
+
+function createProductCard(p,st){
+  const card=document.createElement('div');
+  card.className='product-card '+(st.cls==='red'?'caducado':st.cls==='yellow'?'proximo':'vigente');
+  const left=document.createElement('div'); left.className='product-left';
+  left.innerHTML=`<div class="product-name">${p.name}</div>
+    <div class="product-meta">${CATEGORIES[p.category]?.label||p.category} • Caduca: ${p.expiresAt}</div>`;
+  const actions=document.createElement('div'); actions.className='product-actions';
+  const badge=document.createElement('div'); badge.className='badge '+(st.cls==='red'?'red':st.cls==='yellow'?'yellow':'green'); badge.textContent=st.label;
+  actions.appendChild(badge);
+  if(!p.retired){
+    const btn=document.createElement('button'); btn.className='btn-action'; btn.textContent='Retirar';
+    btn.onclick=()=>{ p.retired=true; state.history.push({...p,retiredAt:new Date().toISOString()}); localStorage.setItem(STORAGE,JSON.stringify(state)); render(); mainScroll.scrollTo({top:0,behavior:'smooth'}); };
+    actions.appendChild(btn);
+  }
+  card.appendChild(left); card.appendChild(actions); return card;
+}
+
+filterChips.forEach(chip=>{chip.addEventListener('click',()=>{filterChips.forEach(c=>c.classList.remove('active')); chip.classList.add('active'); render(); mainScroll.scrollTo({top:0,behavior:'smooth'});});});
+searchInput.addEventListener('input',()=>render());
+
+btnAdd.addEventListener('click',()=>{modal.classList.add('show'); fName.value=''; fCategory.value='lacteos'; fExpires.value=''; daysLeft.textContent='— días'; fName.focus();});
+cancelBtn.addEventListener('click',()=>modal.classList.remove('show'));
+
+fExpires.addEventListener('change',()=>{const v=fExpires.value;if(!v){daysLeft.textContent='— días';return;}daysLeft.textContent=daysBetween(new Date(),new Date(v))+' día(s)';});
+
+saveBtn.addEventListener('click',()=>{
+  const name=fName.value.trim(); const category=fCategory.value; const expiresAt=fExpires.value;
+  if(!name||!expiresAt){alert('Nombre y fecha de caducidad obligatorios'); return;}
+  state.products.push({id:uid(),name,category,expiresAt,retired:false}); localStorage.setItem(STORAGE,JSON.stringify(state));
+  modal.classList.remove('show'); render();
+});
+
+tabProducts.addEventListener('click',()=>{mainScroll.style.display='flex'; historyView.style.display='none'; tabProducts.classList.add('active'); tabHistory.classList.remove('active');});
+tabHistory.addEventListener('click',()=>{mainScroll.style.display='none'; historyView.style.display='flex'; tabHistory.classList.add('active'); tabProducts.classList.remove('active');});
+backToProducts.addEventListener('click',()=>{tabProducts.click();});
+
+render();
 </script>
 </body>
 </html>
