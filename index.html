@@ -36,7 +36,6 @@ html,body{height:100%;margin:0;background:var(--bg);color:var(--text);-webkit-fo
 .filter-chip.active{background:var(--red);color:white;box-shadow:0 6px 18px rgba(209,52,52,0.12)}
 
 .main-scroll {flex:1;overflow:auto;padding-bottom:90px;display:flex;flex-direction:column;gap:14px;}
-
 .section-title{font-size:16px;font-weight:700;margin:4px 0 8px 0;color:var(--muted);display:flex;align-items:center;gap:8px}
 
 .product-card{background:var(--surface);border-radius:var(--card-radius);padding:14px;display:flex;justify-content:space-between;align-items:center;gap:12px;box-shadow:0 8px 24px rgba(2,6,23,0.08);
@@ -93,7 +92,8 @@ border-left:6px solid transparent;}
     <button id="btnAdd" class="btn-add">➕ Agregar</button>
   </div>
 
-  <div>
+  <!-- Productos -->
+  <div class="main-scroll" id="mainScroll">
     <div class="filters" id="filters">
       <button class="filter-chip active" data-filter="all">Todos</button>
       <button class="filter-chip" data-filter="lacteos">🧀 Lácteos</button>
@@ -106,9 +106,7 @@ border-left:6px solid transparent;}
       <input id="search" class="input" type="search" placeholder="Buscar por nombre o código">
       <div class="hint" style="margin-top:6px">Los productos caducados aparecen primero.</div>
     </div>
-  </div>
 
-  <div class="main-scroll" id="mainScroll">
     <section>
       <div class="section-title">🔴 A CADUCAR</div>
       <div id="group-caducados" class="list-group"></div>
@@ -122,58 +120,63 @@ border-left:6px solid transparent;}
       <div id="group-vigentes" class="list-group"></div>
     </section>
   </div>
-</div>
 
-<div style="display:none" id="historyView">
-  <div style="padding:14px">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
-      <div style="font-weight:700;font-size:18px">📜 Historial de retirados</div>
-      <button id="backToProducts" class="tab-btn" style="flex:0;background:transparent;border-radius:8px;padding:8px 10px;color:var(--red);border:2px solid var(--red)">⬅ Volver</button>
+  <!-- Historial -->
+  <div id="historyView" style="display:none;flex:1;overflow:auto;padding-bottom:90px">
+    <div style="padding:14px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+        <div style="font-weight:700;font-size:18px">📜 Historial de retirados</div>
+        <button id="backToProducts" class="tab-btn" style="flex:0;background:transparent;border-radius:8px;padding:8px 10px;color:var(--red);border:2px solid var(--red)">⬅ Volver</button>
+      </div>
+      <div id="historyList" style="display:flex;flex-direction:column;gap:10px"></div>
     </div>
-    <div id="historyList" style="display:flex;flex-direction:column;gap:10px;padding-bottom:120px"></div>
+  </div>
+
+  <!-- Modal Agregar -->
+  <div class="modal-backdrop" id="modal">
+    <div class="modal">
+      <h3>Agregar producto</h3>
+      <div class="form-field">
+        <label class="hint">Nombre</label>
+        <input id="fName" class="input" type="text" placeholder="Ej. Leche entera 1L">
+      </div>
+      <div class="form-field">
+        <label class="hint">Código de barra</label>
+        <input id="fCode" class="input" type="text" placeholder="Ej. 123456789">
+      </div>
+      <div class="form-field">
+        <label class="hint">Categoría</label>
+        <select id="fCategory" class="input">
+          <option value="lacteos">Lácteos</option>
+          <option value="embutidos">Embutidos</option>
+          <option value="carnes">Carnes</option>
+          <option value="fruver">Fruver</option>
+          <option value="congelados">Congelados</option>
+        </select>
+      </div>
+      <div class="form-field">
+        <label class="hint">Fecha de caducidad</label>
+        <input id="fExpires" class="input" type="date">
+        <div class="small-muted" id="daysLeft">— días</div>
+      </div>
+      <div style="display:flex;gap:10px;margin-top:10px">
+        <button id="saveBtn" class="btn-action" style="flex:1">Guardar</button>
+        <button id="cancelBtn" class="btn-action ghost" style="flex:1">Cancelar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tab bar -->
+  <div class="tabbar">
+    <button class="tab-btn active" id="tabProducts">Productos</button>
+    <button class="tab-btn" id="tabHistory">Historial</button>
   </div>
 </div>
 
-<div class="modal-backdrop" id="modal">
-  <div class="modal">
-    <h3>Agregar producto</h3>
-    <div class="form-field">
-      <label class="hint">Nombre</label>
-      <input id="fName" class="input" type="text" placeholder="Ej. Leche entera 1L">
-    </div>
-    <div class="form-field">
-      <label class="hint">Código de barras</label>
-      <input id="fCode" class="input" type="text" placeholder="Ej. 1234567890123">
-    </div>
-    <div class="form-field">
-      <label class="hint">Categoría</label>
-      <select id="fCategory" class="input">
-        <option value="lacteos">Lácteos</option>
-        <option value="embutidos">Embutidos</option>
-        <option value="carnes">Carnes</option>
-        <option value="fruver">Fruver</option>
-        <option value="congelados">Congelados</option>
-      </select>
-    </div>
-    <div class="form-field">
-      <label class="hint">Fecha de caducidad</label>
-      <input id="fExpires" class="input" type="date">
-      <div class="small-muted" id="daysLeft">— días</div>
-    </div>
-    <div style="display:flex;gap:10px;margin-top:10px">
-      <button id="saveBtn" class="btn-action" style="flex:1">Guardar</button>
-      <button id="cancelBtn" class="btn-action ghost" style="flex:1">Cancelar</button>
-    </div>
-  </div>
-</div>
-
-<div class="tabbar">
-  <button class="tab-btn active" id="tabProducts">Productos</button>
-  <button class="tab-btn" id="tabHistory">Historial</button>
-</div>
-
+<!-- Firebase y JS -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
+import { getDatabase, ref, push, onValue } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-database.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyAy0pN2hmOARLRrWGHdbJHI_Rm3BnfwIvE",
@@ -184,8 +187,8 @@ const firebaseConfig = {
   messagingSenderId: "832499679175",
   appId: "1:832499679175:web:4765167b898498b86523e2"
 };
-
 const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
 
 const CATEGORIES = {
   lacteos:{label:'Lácteos', alertDays:2},
@@ -194,8 +197,10 @@ const CATEGORIES = {
   fruver:{label:'Fruver', alertDays:1},
   congelados:{label:'Congelados', alertDays:1}
 };
+
 function daysBetween(a,b){return Math.ceil((Date.UTC(b.getFullYear(),b.getMonth(),b.getDate())-Date.UTC(a.getFullYear(),a.getMonth(),a.getDate()))/(24*60*60*1000));}
 function uid(){return 'p_'+Math.random().toString(36).slice(2,9);}
+
 let state = { products: [], history: [] };
 const STORAGE = 'demo-control-tia';
 if(localStorage.getItem(STORAGE)) state = JSON.parse(localStorage.getItem(STORAGE));
@@ -205,12 +210,12 @@ const groupProx = document.getElementById('group-proximos');
 const groupVig = document.getElementById('group-vigentes');
 const historyList = document.getElementById('historyList');
 const mainScroll = document.getElementById('mainScroll');
+const historyView = document.getElementById('historyView');
 const modal = document.getElementById('modal');
 const btnAdd = document.getElementById('btnAdd');
 const cancelBtn = document.getElementById('cancelBtn');
 const saveBtn = document.getElementById('saveBtn');
 const backToProducts = document.getElementById('backToProducts');
-const historyView = document.getElementById('historyView');
 const fName = document.getElementById('fName');
 const fCode = document.getElementById('fCode');
 const fCategory = document.getElementById('fCategory');
@@ -233,18 +238,23 @@ function computeStatus(p){
 
 function render(){
   groupCad.innerHTML=''; groupProx.innerHTML=''; groupVig.innerHTML=''; historyList.innerHTML='';
+
   const q=searchInput.value.trim().toLowerCase();
   const activeFilter=document.querySelector('.filter-chip.active')?.dataset.filter||'all';
   const cad=[], prox=[], vig=[];
+
   state.products.forEach(p=>{
-    if(activeFilter!=='all'&&p.category!==activeFilter) return;
-    if(q&&!(p.name.toLowerCase().includes(q)||p.code?.includes(q))) return;
+    if(activeFilter!=='all'&&(p.category!==activeFilter)) return;
+    if(q&&( !p.name.toLowerCase().includes(q) && !p.code?.includes(q))) return;
+
     const st=computeStatus(p);
     const card=createProductCard(p,st);
+
     if(st.cls==='red') cad.push(card);
     else if(st.cls==='yellow') prox.push(card);
     else vig.push(card);
   });
+
   cad.forEach(c=>groupCad.appendChild(c));
   prox.forEach(c=>groupProx.appendChild(c));
   vig.forEach(c=>groupVig.appendChild(c));
@@ -273,24 +283,47 @@ function createProductCard(p,st){
   actions.appendChild(badge);
   if(!p.retired){
     const btn=document.createElement('button'); btn.className='btn-action'; btn.textContent='Retirar';
-    btn.onclick=()=>{ p.retired=true; state.history.push({...p,retiredAt:new Date().toISOString()}); localStorage.setItem(STORAGE,JSON.stringify(state)); render(); mainScroll.scrollTo({top:0,behavior:'smooth'}); };
+    btn.onclick=()=>{
+      p.retired=true;
+      state.history.push({...p,retiredAt:new Date().toISOString()});
+      localStorage.setItem(STORAGE,JSON.stringify(state));
+      render();
+      mainScroll.scrollTo({top:0,behavior:'smooth'});
+
+      // Guardar en Firebase
+      push(ref(db,'history'),{...p,retiredAt:new Date().toISOString()});
+    };
     actions.appendChild(btn);
   }
   card.appendChild(left); card.appendChild(actions); return card;
 }
 
-filterChips.forEach(chip=>{chip.addEventListener('click',()=>{filterChips.forEach(c=>c.classList.remove('active')); chip.classList.add('active'); render(); mainScroll.scrollTo({top:0,behavior:'smooth'});});});
-searchInput.addEventListener('input',()=>render());
+// Eventos
+filterChips.forEach(chip=>{chip.addEventListener('click',()=>{
+  filterChips.forEach(c=>c.classList.remove('active'));
+  chip.classList.add('active');
+  render();
+  mainScroll.scrollTo({top:0,behavior:'smooth'});
+});});
 
+searchInput.addEventListener('input',()=>render());
 btnAdd.addEventListener('click',()=>{modal.classList.add('show'); fName.value=''; fCode.value=''; fCategory.value='lacteos'; fExpires.value=''; daysLeft.textContent='— días'; fName.focus();});
 cancelBtn.addEventListener('click',()=>modal.classList.remove('show'));
-
 fExpires.addEventListener('change',()=>{const v=fExpires.value;if(!v){daysLeft.textContent='— días';return;}daysLeft.textContent=daysBetween(new Date(),new Date(v))+' día(s)';});
 
 saveBtn.addEventListener('click',()=>{
-  const name=fName.value.trim(); const code=fCode.value.trim(); const category=fCategory.value; const expiresAt=fExpires.value;
+  const name=fName.value.trim();
+  const code=fCode.value.trim();
+  const category=fCategory.value;
+  const expiresAt=fExpires.value;
   if(!name||!expiresAt){alert('Nombre y fecha de caducidad obligatorios'); return;}
-  state.products.push({id:uid(),name,code,category,expiresAt,retired:false}); localStorage.setItem(STORAGE,JSON.stringify(state));
+  const prod = {id:uid(),name,code,category,expiresAt,retired:false};
+  state.products.push(prod);
+  localStorage.setItem(STORAGE,JSON.stringify(state));
+
+  // Guardar en Firebase
+  push(ref(db,'products'),prod);
+
   modal.classList.remove('show'); render();
 });
 
