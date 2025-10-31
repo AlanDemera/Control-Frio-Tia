@@ -3,110 +3,98 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Control Productos TÍA — Mejorado</title>
+<title>Control Productos TÍA — Demo</title>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg:#f9fafb;
-    --surface:#fff;
-    --text:#111827;
+    --bg:#ffffff;
+    --surface:#fbfbfb;
+    --text:#0f172a;
     --muted:#6b7280;
     --red:#D32F2F;
-    --red-dark:#b22222;
-    --green:#22c55e;
-    --yellow:#facc15;
-    --radius:14px;
-    --shadow:0 6px 18px rgba(0,0,0,0.08);
-    font-family:'Poppins',system-ui;
+    --red-600:#C12727;
+    --green:#1E9B52;
+    --yellow:#F59E0B;
+    --card-radius:14px;
+    --shadow: 0 8px 24px rgba(2,6,23,0.08);
+    --gap:14px;
+    font-family: 'Poppins', system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
   }
-  *{box-sizing:border-box}
-  html,body{margin:0;height:100%;background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased;}
-  button{font-family:inherit;cursor:pointer;}
 
-  .app{
-    max-width:540px;margin:0 auto;height:100vh;
-    display:flex;flex-direction:column;gap:12px;
-    padding:12px;overflow:hidden;
-  }
+  *{box-sizing:border-box}
+  html,body{height:100%;margin:0;background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased}
+  .app{max-width:540px;margin:0 auto;height:100vh;display:flex;flex-direction:column;padding:12px;gap:12px}
 
   .header{
-    display:flex;align-items:center;justify-content:space-between;
-    background:linear-gradient(90deg,var(--red),var(--red-dark));
-    color:#fff;padding:14px 16px;border-radius:12px;box-shadow:var(--shadow);
+    display:flex;align-items:center;justify-content:space-between;gap:12px;
+    padding:12px;border-radius:12px;background:linear-gradient(90deg,var(--red),var(--red-600));
+    color:white;box-shadow:var(--shadow);
   }
-  .brand .title{font-size:18px;font-weight:700}
-  .brand .subtitle{font-size:12px;opacity:0.9}
-  .btn-add{
-    background:#fff;color:var(--red);border:none;padding:10px 14px;border-radius:10px;font-weight:700;
-    box-shadow:var(--shadow);
-  }
+  .brand{display:flex;flex-direction:row;align-items:center;gap:8px}
+  .brand img{width:36px;height:36px;border-radius:6px}
+  .brand .text{display:flex;flex-direction:column;gap:2px}
+  .brand .title{font-size:18px;font-weight:700;letter-spacing:0.2px}
+  .brand .subtitle{font-size:12px;opacity:0.95}
 
-  .filters{display:flex;gap:10px;overflow-x:auto;padding:6px 0;}
+  .btn-add{background:white;color:var(--red);border:none;padding:10px 14px;border-radius:12px;font-weight:700;font-size:15px;cursor:pointer;box-shadow:0 6px 18px rgba(0,0,0,0.08)}
+  .btn-add:active{transform:translateY(1px)}
+
+  .filters {display:flex;gap:10px;overflow-x:auto;padding-bottom:4px}
   .filter-chip{
-    flex:0 0 auto;border:2px solid var(--red);color:var(--red);
-    background:#fff;padding:8px 14px;border-radius:999px;font-weight:600;font-size:14px;white-space:nowrap;
+    flex:0 0 auto;
+    padding:10px 14px;border-radius:999px;border:2px solid var(--red);color:var(--red);background:transparent;font-weight:600;font-size:14px;cursor:pointer;white-space:nowrap;
   }
-  .filter-chip.active{background:var(--red);color:#fff;box-shadow:var(--shadow)}
+  .filter-chip.active{background:var(--red);color:white;box-shadow:0 6px 18px rgba(209,52,52,0.12)}
 
-  .searchbox{margin-top:8px;}
-  .input{width:100%;padding:12px;border-radius:10px;border:1px solid #ddd;font-size:15px;}
-  .hint{font-size:12px;color:var(--muted);margin-top:4px;}
+  .main-scroll {flex:1;overflow:auto;padding-bottom:90px;display:flex;flex-direction:column;gap:14px;}
 
-  .main-scroll{
-    flex:1;overflow:auto;display:flex;flex-direction:column;gap:14px;
-    padding-bottom:80px;
-  }
-  .section-title{font-weight:700;font-size:15px;color:var(--muted);margin-top:10px;}
+  .section-title{font-size:16px;font-weight:700;margin:4px 0 8px 0;color:var(--muted);display:flex;align-items:center;gap:8px}
 
-  .list-group{display:flex;flex-direction:column;gap:10px;}
   .product-card{
-    background:var(--surface);border-radius:var(--radius);
-    padding:14px;display:flex;justify-content:space-between;align-items:center;gap:12px;
-    box-shadow:var(--shadow);transition:transform 0.15s ease;
+    background:var(--surface);border-radius:var(--card-radius);padding:14px;display:flex;justify-content:space-between;align-items:center;gap:12px;box-shadow:var(--shadow);
+    border-left:6px solid transparent;
   }
-  .product-card:hover{transform:scale(1.01);}
-  .product-name{font-weight:700;}
-  .product-meta{font-size:13px;color:var(--muted);}
-  .badge{padding:6px 10px;border-radius:10px;font-weight:700;font-size:13px;color:white;text-align:center;}
-  .badge.red{background:var(--red);}
-  .badge.yellow{background:var(--yellow);color:#222;}
-  .badge.green{background:var(--green);}
-  .btn-action{
-    background:var(--red);color:#fff;border:none;padding:8px 12px;border-radius:10px;font-weight:600;
-  }
+  .product-left{flex:1;display:flex;flex-direction:column;gap:6px}
+  .product-name{font-size:16px;font-weight:700}
+  .product-meta{font-size:13px;color:var(--muted)}
+  .product-code{font-size:13px;color:#444}
 
-  /* Modal add */
-  .modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,0.55);display:none;align-items:center;justify-content:center;padding:18px;z-index:50;}
-  .modal-backdrop.show{display:flex;}
-  .modal{
-    width:100%;max-width:480px;background:#fff;border-radius:16px;padding:18px;box-shadow:0 20px 40px rgba(0,0,0,0.25);
-    animation:fadeUp .25s ease;
-  }
-  @keyframes fadeUp{from{opacity:0;transform:translateY(30px);}to{opacity:1;transform:translateY(0);}}
+  .product-card.caducado{border-left-color:var(--red)}
+  .product-card.proximo{border-left-color:var(--yellow)}
+  .product-card.vigente{border-left-color:var(--green)}
 
-  .form-field{display:flex;flex-direction:column;gap:6px;margin-bottom:10px;}
+  .product-actions{display:flex;flex-direction:column;gap:8px;align-items:flex-end}
+  .badge{padding:6px 10px;border-radius:10px;font-weight:700;font-size:13px;color:white}
+  .badge.red{background:var(--red)}
+  .badge.yellow{background:var(--yellow);color:#222}
+  .badge.green{background:var(--green)}
 
-  /* Tabbar */
-  .tabbar{
-    position:fixed;bottom:0;left:0;right:0;display:flex;gap:10px;
-    background:#fff;border-top:1px solid #eee;padding:10px 12px;z-index:20;
-  }
-  .tab-btn{
-    flex:1;padding:12px;border-radius:10px;font-weight:700;font-size:15px;border:none;
-  }
-  .tab-btn.active{background:linear-gradient(90deg,var(--red),var(--red-dark));color:#fff;box-shadow:var(--shadow);}
+  .btn-action{padding:8px 12px;border-radius:10px;border:none;background:var(--red);color:white;font-weight:700;font-size:14px;cursor:pointer}
+  .btn-action.ghost{background:transparent;border:2px solid var(--red);color:var(--red);font-weight:700}
 
-  /* Historial lateral */
-  .history-panel{
-    position:fixed;inset:0;left:100%;background:#fff;z-index:40;
-    display:flex;flex-direction:column;max-width:540px;margin:0 auto;
-    transition:left 0.3s ease,box-shadow 0.3s ease;
-    box-shadow:-4px 0 16px rgba(0,0,0,0.1);
+  .list-group{display:flex;flex-direction:column;gap:10px}
+
+  .modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,0.55);display:none;align-items:center;justify-content:center;padding:18px;z-index:50}
+  .modal-backdrop.show{display:flex}
+  .modal{width:100%;max-width:520px;background:white;border-radius:16px;padding:16px;box-shadow:0 20px 40px rgba(0,0,0,0.25)}
+  .modal h3{margin:0 0 8px 0;font-size:18px}
+  .form-field{display:flex;flex-direction:column;gap:6px;margin-bottom:8px}
+  .input{padding:12px;border-radius:10px;border:1px solid #eee;font-size:15px}
+  .input::placeholder{color:#9aa0a6}
+  .hint{font-size:12px;color:var(--muted)}
+
+  .tabbar{position:fixed;left:0;right:0;bottom:0;display:flex;justify-content:space-between;gap:12px;padding:12px;background:white;border-top:1px solid #f0f0f0}
+  .tab-btn{flex:1;padding:12px;border-radius:12px;border:none;background:transparent;font-weight:700;font-size:16px;cursor:pointer}
+  .tab-btn.active{background:linear-gradient(90deg,var(--red),var(--red-600));color:white;box-shadow:0 8px 20px rgba(209,52,52,0.12)}
+
+  .history-card{background:#fff;border-radius:12px;padding:12px;box-shadow:var(--shadow);display:flex;justify-content:space-between;align-items:center;gap:10px}
+  .history-left{display:flex;flex-direction:column;gap:6px}
+  .small-muted{font-size:13px;color:var(--muted)}
+
+  @media(min-width:520px){
+    .app{padding:18px}
+    .product-name{font-size:18px}
   }
-  .history-panel.show{left:calc(100% - 100%);box-shadow:-4px 0 16px rgba(0,0,0,0.15);}
-  .history-header{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;border-bottom:1px solid #eee;}
-  .history-list{flex:1;overflow:auto;padding:14px;display:flex;flex-direction:column;gap:10px;}
-  .history-card{background:#fff;border-radius:10px;box-shadow:var(--shadow);padding:12px;display:flex;justify-content:space-between;align-items:center;}
 
 </style>
 </head>
@@ -114,152 +102,19 @@
 <div class="app">
   <div class="header">
     <div class="brand">
-      <div class="title">Control Productos TÍA</div>
-      <div class="subtitle">Refrigerados — Demo</div>
+      <img src="https://i.imgur.com/F2szE34.png" alt="Logo TÍA">
+      <div class="text">
+        <div class="title">Control Productos TÍA</div>
+        <div class="subtitle">Refrigerados — Demo Funcional</div>
+      </div>
     </div>
     <button id="btnAdd" class="btn-add">➕ Agregar</button>
   </div>
 
-  <div class="filters" id="filters">
-    <button class="filter-chip active" data-filter="all">Todos</button>
-    <button class="filter-chip" data-filter="lacteos">🧀 Lácteos</button>
-    <button class="filter-chip" data-filter="embutidos">🥩 Embutidos</button>
-    <button class="filter-chip" data-filter="carnes">🍗 Carnes</button>
-    <button class="filter-chip" data-filter="fruver">🍎 Fruver</button>
-    <button class="filter-chip" data-filter="congelados">❄️ Congelados</button>
-  </div>
-
-  <div class="searchbox">
-    <input id="search" class="input" type="search" placeholder="Buscar por nombre">
-    <div class="hint">Los productos caducados aparecen primero.</div>
-  </div>
-
-  <div class="main-scroll" id="mainScroll">
-    <section>
-      <div class="section-title">🔴 A CADUCAR</div>
-      <div id="group-caducados" class="list-group"></div>
-    </section>
-    <section>
-      <div class="section-title">🟡 PRÓXIMOS</div>
-      <div id="group-proximos" class="list-group"></div>
-    </section>
-    <section>
-      <div class="section-title">🟢 VIGENTES</div>
-      <div id="group-vigentes" class="list-group"></div>
-    </section>
-  </div>
-</div>
-
-<!-- Panel de historial deslizante -->
-<div class="history-panel" id="historyPanel">
-  <div class="history-header">
-    <div style="font-weight:700;">📜 Historial de retirados</div>
-    <button id="closeHistory" style="border:none;background:transparent;color:var(--red);font-weight:700;">✖ Cerrar</button>
-  </div>
-  <div id="historyList" class="history-list"></div>
-</div>
-
-<!-- Modal agregar producto -->
-<div class="modal-backdrop" id="modal">
-  <div class="modal">
-    <h3>Agregar producto</h3>
-    <div class="form-field">
-      <label class="hint">Nombre</label>
-      <input id="fName" class="input" type="text" placeholder="Ej. Leche entera 1L">
-    </div>
-    <div class="form-field">
-      <label class="hint">Categoría</label>
-      <select id="fCategory" class="input">
-        <option value="lacteos">Lácteos</option>
-        <option value="embutidos">Embutidos</option>
-        <option value="carnes">Carnes</option>
-        <option value="fruver">Fruver</option>
-        <option value="congelados">Congelados</option>
-      </select>
-    </div>
-    <div class="form-field">
-      <label class="hint">Fecha de caducidad</label>
-      <input id="fExpires" class="input" type="date">
-      <div class="hint" id="daysLeft">— días</div>
-    </div>
-    <div style="display:flex;gap:10px;margin-top:10px;">
-      <button id="saveBtn" class="btn-action" style="flex:1;">Guardar</button>
-      <button id="cancelBtn" class="btn-action" style="flex:1;background:#fff;color:var(--red);border:2px solid var(--red);">Cancelar</button>
-    </div>
-  </div>
-</div>
-
-<div class="tabbar">
-  <button class="tab-btn active" id="tabProducts">Productos</button>
-  <button class="tab-btn" id="tabHistory">Historial</button>
-</div>
+  <!-- El resto de tu HTML queda igual, solo reemplaza la cabecera como arriba -->
 
 <script>
-const CATEGORIES={lacteos:{label:'Lácteos',alertDays:2},embutidos:{label:'Embutidos',alertDays:1},carnes:{label:'Carnes',alertDays:2},fruver:{label:'Fruver',alertDays:1},congelados:{label:'Congelados',alertDays:1}};
-function daysBetween(a,b){return Math.ceil((Date.UTC(b.getFullYear(),b.getMonth(),b.getDate())-Date.UTC(a.getFullYear(),a.getMonth(),a.getDate()))/(86400000));}
-function uid(){return'p_'+Math.random().toString(36).slice(2,9);}
-let state={products:[],history:[]};
-const STORAGE='demo-control-tia';
-if(localStorage.getItem(STORAGE)) state=JSON.parse(localStorage.getItem(STORAGE));
-const groupCad=document.getElementById('group-caducados'),groupProx=document.getElementById('group-proximos'),groupVig=document.getElementById('group-vigentes'),historyList=document.getElementById('historyList');
-const modal=document.getElementById('modal'),fName=document.getElementById('fName'),fCategory=document.getElementById('fCategory'),fExpires=document.getElementById('fExpires'),daysLeft=document.getElementById('daysLeft');
-const tabProducts=document.getElementById('tabProducts'),tabHistory=document.getElementById('tabHistory'),historyPanel=document.getElementById('historyPanel');
-
-function computeStatus(p){
-  const today=new Date(),exp=new Date(p.expiresAt),d=daysBetween(today,exp),cat=CATEGORIES[p.category]||{alertDays:1};
-  if(d<0) return{label:`Caducado (${Math.abs(d)}d)`,cls:'red'};
-  if(d<=cat.alertDays) return{label:`Próximo (${d}d)`,cls:'yellow'};
-  return{label:`Vigente (${d}d)`,cls:'green'};
-}
-function render(){
-  groupCad.innerHTML='';groupProx.innerHTML='';groupVig.innerHTML='';historyList.innerHTML='';
-  const q=document.getElementById('search').value.toLowerCase().trim();
-  const activeFilter=document.querySelector('.filter-chip.active')?.dataset.filter||'all';
-  const cad=[],prox=[],vig=[];
-  state.products.forEach(p=>{
-    if(p.retired) return;
-    if(activeFilter!=='all'&&p.category!==activeFilter) return;
-    if(q&&!p.name.toLowerCase().includes(q)) return;
-    const st=computeStatus(p);
-    const card=document.createElement('div');
-    card.className='product-card';
-    card.innerHTML=`<div><div class="product-name">${p.name}</div><div class="product-meta">${CATEGORIES[p.category]?.label||p.category} • Caduca: ${p.expiresAt}</div></div>`;
-    const right=document.createElement('div');
-    const badge=document.createElement('div');badge.className='badge '+st.cls;badge.textContent=st.label;right.appendChild(badge);
-    const btn=document.createElement('button');btn.className='btn-action';btn.textContent='Retirar';
-    btn.onclick=()=>{p.retired=true;state.history.push({...p,retiredAt:new Date().toISOString()});localStorage.setItem(STORAGE,JSON.stringify(state));render();};
-    right.appendChild(btn);
-    card.appendChild(right);
-    if(st.cls==='red')cad.push(card);else if(st.cls==='yellow')prox.push(card);else vig.push(card);
-  });
-  cad.forEach(c=>groupCad.appendChild(c));
-  prox.forEach(c=>groupProx.appendChild(c));
-  vig.forEach(c=>groupVig.appendChild(c));
-  state.history.slice().reverse().forEach(h=>{
-    const el=document.createElement('div');el.className='history-card';
-    el.innerHTML=`<div><div style="font-weight:700">${h.name}</div><div class="hint">${CATEGORIES[h.category]?.label||h.category}</div></div><div class="hint">${new Date(h.retiredAt).toLocaleString()}</div>`;
-    historyList.appendChild(el);
-  });
-  if(!groupCad.hasChildNodes())groupCad.innerHTML='<div class="hint">No hay productos caducados</div>';
-  if(!groupProx.hasChildNodes())groupProx.innerHTML='<div class="hint">No hay próximos productos</div>';
-  if(!groupVig.hasChildNodes())groupVig.innerHTML='<div class="hint">No hay productos vigentes</div>';
-  if(!historyList.hasChildNodes())historyList.innerHTML='<div class="hint">Aún no hay historial</div>';
-}
-document.getElementById('btnAdd').onclick=()=>{modal.classList.add('show');fName.value='';fExpires.value='';daysLeft.textContent='— días';fName.focus();};
-document.getElementById('cancelBtn').onclick=()=>modal.classList.remove('show');
-fExpires.onchange=()=>{const v=fExpires.value;if(!v)return daysLeft.textContent='— días';daysLeft.textContent=daysBetween(new Date(),new Date(v))+' día(s)';};
-document.getElementById('saveBtn').onclick=()=>{
-  const name=fName.value.trim(),category=fCategory.value,expiresAt=fExpires.value;
-  if(!name||!expiresAt){alert('Nombre y fecha obligatorios');return;}
-  state.products.push({id:uid(),name,category,expiresAt,retired:false});
-  localStorage.setItem(STORAGE,JSON.stringify(state));
-  modal.classList.remove('show');render();
-};
-document.querySelectorAll('.filter-chip').forEach(chip=>chip.onclick=()=>{document.querySelectorAll('.filter-chip').forEach(c=>c.classList.remove('active'));chip.classList.add('active');render();});
-document.getElementById('search').oninput=()=>render();
-tabHistory.onclick=()=>{historyPanel.classList.add('show');};
-document.getElementById('closeHistory').onclick=()=>{historyPanel.classList.remove('show');};
-render();
+/* Aquí va exactamente todo tu JavaScript tal como estaba, sin cambios */
 </script>
 </body>
 </html>
