@@ -3,11 +3,12 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Control Productos TÍA </title>
+<title>Control Productos TÍA</title>
 <link rel="manifest" href="manifest.json">
 <link rel="icon" type="image/png" href="logo.png">
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
+/* ==== CSS ==== */
 :root{
   --bg:#ffffff; --surface:#fbfbfb; --text:#0f172a; --muted:#6b7280;
   --red:#D32F2F; --red-600:#C12727; --green:#1E9B52; --yellow:#F59E0B;
@@ -18,7 +19,7 @@
 html,body{height:100%;margin:0;background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased}
 .app{max-width:540px;margin:0 auto;height:100vh;display:flex;flex-direction:column;padding:12px;gap:12px}
 
-.header{display:flex;align-items:center;justify-content:space-between;gap:12px;
+.header{display:flex;align-items:center;justify-content:space-between;gap:8px;
   padding:12px;border-radius:12px;background:linear-gradient(90deg,var(--red),var(--red-600));
   color:white;box-shadow:0 8px 24px rgba(2,6,23,0.08);
 }
@@ -36,6 +37,7 @@ html,body{height:100%;margin:0;background:var(--bg);color:var(--text);-webkit-fo
 .filter-chip.active{background:var(--red);color:white;box-shadow:0 6px 18px rgba(209,52,52,0.12)}
 
 .main-scroll {flex:1;overflow:auto;padding-bottom:90px;display:flex;flex-direction:column;gap:14px;}
+
 .section-title{font-size:16px;font-weight:700;margin:4px 0 8px 0;color:var(--muted);display:flex;align-items:center;gap:8px}
 
 .product-card{background:var(--surface);border-radius:var(--card-radius);padding:14px;display:flex;justify-content:space-between;align-items:center;gap:12px;box-shadow:0 8px 24px rgba(2,6,23,0.08);
@@ -86,14 +88,14 @@ border-left:6px solid transparent;}
       <img src="logo.png" alt="Logo TÍA">
       <div class="text">
         <div class="title">Control Productos TÍA</div>
-        <div class="subtitle">Refrigerados </div>
+        <div class="subtitle">Refrigerados AT: ALAN DEMERA</div>
       </div>
     </div>
     <button id="btnAdd" class="btn-add">➕ Agregar</button>
+    <button id="btnHistory" class="btn-add">📜 Historial</button>
   </div>
 
-  <!-- Productos -->
-  <div class="main-scroll" id="mainScroll">
+  <div>
     <div class="filters" id="filters">
       <button class="filter-chip active" data-filter="all">Todos</button>
       <button class="filter-chip" data-filter="lacteos">🧀 Lácteos</button>
@@ -106,7 +108,9 @@ border-left:6px solid transparent;}
       <input id="search" class="input" type="search" placeholder="Buscar por nombre o código">
       <div class="hint" style="margin-top:6px">Los productos caducados aparecen primero.</div>
     </div>
+  </div>
 
+  <div class="main-scroll" id="mainScroll">
     <section>
       <div class="section-title">🔴 A CADUCAR</div>
       <div id="group-caducados" class="list-group"></div>
@@ -120,76 +124,52 @@ border-left:6px solid transparent;}
       <div id="group-vigentes" class="list-group"></div>
     </section>
   </div>
+</div>
 
-  <!-- Historial -->
-  <div id="historyView" style="display:none;flex:1;overflow:auto;padding-bottom:90px">
-    <div style="padding:14px">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
-        <div style="font-weight:700;font-size:18px">📜 Historial de retirados</div>
-        <button id="backToProducts" class="tab-btn" style="flex:0;background:transparent;border-radius:8px;padding:8px 10px;color:var(--red);border:2px solid var(--red)">⬅ Volver</button>
-      </div>
-      <div id="historyList" style="display:flex;flex-direction:column;gap:10px"></div>
+<div id="historyView" style="display:none">
+  <div style="padding:14px">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+      <div style="font-weight:700;font-size:18px">📜 Historial de retirados</div>
+      <button id="backToProducts" class="tab-btn" style="flex:0;background:transparent;border-radius:8px;padding:8px 10px;color:var(--red);border:2px solid var(--red)">⬅ Volver</button>
     </div>
-  </div>
-
-  <!-- Modal Agregar -->
-  <div class="modal-backdrop" id="modal">
-    <div class="modal">
-      <h3>Agregar producto</h3>
-      <div class="form-field">
-        <label class="hint">Nombre</label>
-        <input id="fName" class="input" type="text" placeholder="Ej. Leche entera 1L">
-      </div>
-      <div class="form-field">
-        <label class="hint">Código de barra</label>
-        <input id="fCode" class="input" type="text" placeholder="Ej. 123456789">
-      </div>
-      <div class="form-field">
-        <label class="hint">Categoría</label>
-        <select id="fCategory" class="input">
-          <option value="lacteos">Lácteos</option>
-          <option value="embutidos">Embutidos</option>
-          <option value="carnes">Carnes</option>
-          <option value="fruver">Fruver</option>
-          <option value="congelados">Congelados</option>
-        </select>
-      </div>
-      <div class="form-field">
-        <label class="hint">Fecha de caducidad</label>
-        <input id="fExpires" class="input" type="date">
-        <div class="small-muted" id="daysLeft">— días</div>
-      </div>
-      <div style="display:flex;gap:10px;margin-top:10px">
-        <button id="saveBtn" class="btn-action" style="flex:1">Guardar</button>
-        <button id="cancelBtn" class="btn-action ghost" style="flex:1">Cancelar</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Tab bar -->
-  <div class="tabbar">
-    <button class="tab-btn active" id="tabProducts">Productos</button>
-    <button class="tab-btn" id="tabHistory">Historial</button>
+    <div id="historyList" style="display:flex;flex-direction:column;gap:10px;padding-bottom:120px"></div>
   </div>
 </div>
 
-<!-- Firebase y JS -->
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
-import { getDatabase, ref, push, onValue } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-database.js";
+<div class="modal-backdrop" id="modalBackdrop">
+  <div class="modal">
+    <h3>Agregar producto</h3>
+    <div class="form-field">
+      <label class="hint">Nombre</label>
+      <input id="fName" class="input" type="text" placeholder="Ej. Leche entera 1L">
+    </div>
+    <div class="form-field">
+      <label class="hint">Código de barra</label>
+      <input id="fCode" class="input" type="text" placeholder="Ej. 1234567890">
+    </div>
+    <div class="form-field">
+      <label class="hint">Categoría</label>
+      <select id="fCategory" class="input">
+        <option value="lacteos">Lácteos</option>
+        <option value="embutidos">Embutidos</option>
+        <option value="carnes">Carnes</option>
+        <option value="fruver">Fruver</option>
+        <option value="congelados">Congelados</option>
+      </select>
+    </div>
+    <div class="form-field">
+      <label class="hint">Fecha de caducidad</label>
+      <input id="fExpires" class="input" type="date">
+      <div class="small-muted" id="daysLeft">— días</div>
+    </div>
+    <div style="display:flex;gap:10px;margin-top:10px">
+      <button id="saveBtn" class="btn-action" style="flex:1">Guardar</button>
+      <button id="cancelBtn" class="btn-action ghost" style="flex:1">Cancelar</button>
+    </div>
+  </div>
+</div>
 
-const firebaseConfig = {
-  apiKey: "AIzaSyAy0pN2hmOARLRrWGHdbJHI_Rm3BnfwIvE",
-  authDomain: "contron-productos-tia.firebaseapp.com",
-  databaseURL: "https://contron-productos-tia-default-rtdb.firebaseio.com",
-  projectId: "contron-productos-tia",
-  storageBucket: "contron-productos-tia.firebasestorage.app",
-  messagingSenderId: "832499679175",
-  appId: "1:832499679175:web:4765167b898498b86523e2"
-};
-const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
-
+<script>
 const CATEGORIES = {
   lacteos:{label:'Lácteos', alertDays:2},
   embutidos:{label:'Embutidos', alertDays:1},
@@ -200,7 +180,6 @@ const CATEGORIES = {
 
 function daysBetween(a,b){return Math.ceil((Date.UTC(b.getFullYear(),b.getMonth(),b.getDate())-Date.UTC(a.getFullYear(),a.getMonth(),a.getDate()))/(24*60*60*1000));}
 function uid(){return 'p_'+Math.random().toString(36).slice(2,9);}
-
 let state = { products: [], history: [] };
 const STORAGE = 'demo-control-tia';
 if(localStorage.getItem(STORAGE)) state = JSON.parse(localStorage.getItem(STORAGE));
@@ -210,12 +189,13 @@ const groupProx = document.getElementById('group-proximos');
 const groupVig = document.getElementById('group-vigentes');
 const historyList = document.getElementById('historyList');
 const mainScroll = document.getElementById('mainScroll');
-const historyView = document.getElementById('historyView');
-const modal = document.getElementById('modal');
+const modalBackdrop = document.getElementById('modalBackdrop');
+
 const btnAdd = document.getElementById('btnAdd');
 const cancelBtn = document.getElementById('cancelBtn');
 const saveBtn = document.getElementById('saveBtn');
 const backToProducts = document.getElementById('backToProducts');
+const historyView = document.getElementById('historyView');
 const fName = document.getElementById('fName');
 const fCode = document.getElementById('fCode');
 const fCategory = document.getElementById('fCategory');
@@ -223,8 +203,7 @@ const fExpires = document.getElementById('fExpires');
 const daysLeft = document.getElementById('daysLeft');
 const searchInput = document.getElementById('search');
 const filterChips = document.querySelectorAll('.filter-chip');
-const tabProducts = document.getElementById('tabProducts');
-const tabHistory = document.getElementById('tabHistory');
+const btnHistory = document.getElementById('btnHistory');
 
 function computeStatus(p){
   const today=new Date();
@@ -238,18 +217,15 @@ function computeStatus(p){
 
 function render(){
   groupCad.innerHTML=''; groupProx.innerHTML=''; groupVig.innerHTML=''; historyList.innerHTML='';
-
   const q=searchInput.value.trim().toLowerCase();
   const activeFilter=document.querySelector('.filter-chip.active')?.dataset.filter||'all';
   const cad=[], prox=[], vig=[];
 
   state.products.forEach(p=>{
-    if(activeFilter!=='all'&&(p.category!==activeFilter)) return;
-    if(q&&( !p.name.toLowerCase().includes(q) && !p.code?.includes(q))) return;
-
+    if(activeFilter!=='all'&&p.category!==activeFilter) return;
+    if(q&&!(p.name.toLowerCase().includes(q)||p.code?.toLowerCase().includes(q))) return;
     const st=computeStatus(p);
     const card=createProductCard(p,st);
-
     if(st.cls==='red') cad.push(card);
     else if(st.cls==='yellow') prox.push(card);
     else vig.push(card);
@@ -261,7 +237,7 @@ function render(){
 
   state.history.slice().reverse().forEach(h=>{
     const el=document.createElement('div'); el.className='history-card';
-    el.innerHTML=`<div class="history-left"><div style="font-weight:700">${h.name}</div><div class="small-muted">${CATEGORIES[h.category]?.label||h.category}</div></div>
+    el.innerHTML=`<div class="history-left"><div style="font-weight:700">${h.name}</div><div class="small-muted">${h.code || ''}</div><div class="small-muted">${CATEGORIES[h.category]?.label||h.category}</div></div>
                   <div class="small-muted">${new Date(h.retiredAt).toLocaleString()}</div>`;
     historyList.appendChild(el);
   });
@@ -277,63 +253,58 @@ function createProductCard(p,st){
   card.className='product-card '+(st.cls==='red'?'caducado':st.cls==='yellow'?'proximo':'vigente');
   const left=document.createElement('div'); left.className='product-left';
   left.innerHTML=`<div class="product-name">${p.name}</div>
-    <div class="product-meta">${CATEGORIES[p.category]?.label||p.category} • Caduca: ${p.expiresAt}</div>`;
+    <div class="product-meta">Código: ${p.code || '—'} • ${CATEGORIES[p.category]?.label||p.category} • Caduca: ${p.expiresAt}</div>`;
   const actions=document.createElement('div'); actions.className='product-actions';
   const badge=document.createElement('div'); badge.className='badge '+(st.cls==='red'?'red':st.cls==='yellow'?'yellow':'green'); badge.textContent=st.label;
   actions.appendChild(badge);
+
   if(!p.retired){
     const btn=document.createElement('button'); btn.className='btn-action'; btn.textContent='Retirar';
     btn.onclick=()=>{
       p.retired=true;
       state.history.push({...p,retiredAt:new Date().toISOString()});
-      localStorage.setItem(STORAGE,JSON.stringify(state));
+      state.products = state.products.filter(pr => !pr.retired);
+      localStorage.setItem('demo-control-tia',JSON.stringify(state));
       render();
-      mainScroll.scrollTo({top:0,behavior:'smooth'});
-
-      // Guardar en Firebase
-      push(ref(db,'history'),{...p,retiredAt:new Date().toISOString()});
     };
     actions.appendChild(btn);
   }
+
   card.appendChild(left); card.appendChild(actions); return card;
 }
 
 // Eventos
-filterChips.forEach(chip=>{chip.addEventListener('click',()=>{
+btnAdd.onclick=()=>{modalBackdrop.classList.add('show'); fName.value=''; fCode.value=''; fCategory.value='lacteos'; fExpires.value=''; daysLeft.textContent='— días'; fName.focus();}
+cancelBtn.onclick=()=>modalBackdrop.classList.remove('show');
+saveBtn.onclick=()=>{
+  const name=fName.value.trim(); const code=fCode.value.trim(); const category=fCategory.value; const expiresAt=fExpires.value;
+  if(!name||!expiresAt){alert('Nombre y fecha de caducidad obligatorios'); return;}
+  state.products.push({id:uid(),name,code,category,expiresAt,retired:false});
+  localStorage.setItem('demo-control-tia',JSON.stringify(state));
+  modalBackdrop.classList.remove('show'); render();
+};
+
+fExpires.onchange=()=>{daysLeft.textContent = fExpires.value ? daysBetween(new Date(), new Date(fExpires.value))+' día(s)' : '— días';};
+
+filterChips.forEach(chip=>chip.onclick=()=>{
   filterChips.forEach(c=>c.classList.remove('active'));
   chip.classList.add('active');
   render();
-  mainScroll.scrollTo({top:0,behavior:'smooth'});
-});});
-
-searchInput.addEventListener('input',()=>render());
-btnAdd.addEventListener('click',()=>{modal.classList.add('show'); fName.value=''; fCode.value=''; fCategory.value='lacteos'; fExpires.value=''; daysLeft.textContent='— días'; fName.focus();});
-cancelBtn.addEventListener('click',()=>modal.classList.remove('show'));
-fExpires.addEventListener('change',()=>{const v=fExpires.value;if(!v){daysLeft.textContent='— días';return;}daysLeft.textContent=daysBetween(new Date(),new Date(v))+' día(s)';});
-
-saveBtn.addEventListener('click',()=>{
-  const name=fName.value.trim();
-  const code=fCode.value.trim();
-  const category=fCategory.value;
-  const expiresAt=fExpires.value;
-  if(!name||!expiresAt){alert('Nombre y fecha de caducidad obligatorios'); return;}
-  const prod = {id:uid(),name,code,category,expiresAt,retired:false};
-  state.products.push(prod);
-  localStorage.setItem(STORAGE,JSON.stringify(state));
-
-  // Guardar en Firebase
-  push(ref(db,'products'),prod);
-
-  modal.classList.remove('show'); render();
 });
 
-tabProducts.addEventListener('click',()=>{mainScroll.style.display='flex'; historyView.style.display='none'; tabProducts.classList.add('active'); tabHistory.classList.remove('active');});
-tabHistory.addEventListener('click',()=>{mainScroll.style.display='none'; historyView.style.display='flex'; tabHistory.classList.add('active'); tabProducts.classList.remove('active');});
-backToProducts.addEventListener('click',()=>{tabProducts.click();});
+searchInput.oninput=()=>render();
+
+// Historial
+btnHistory.onclick=()=>{
+  document.querySelector('.app').style.display='none';
+  historyView.style.display='block';
+};
+backToProducts.onclick=()=>{
+  historyView.style.display='none';
+  document.querySelector('.app').style.display='flex';
+};
 
 render();
 </script>
 </body>
 </html>
-
-
