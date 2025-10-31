@@ -175,155 +175,206 @@ border-left:6px solid transparent;}
   <button class="tab-btn" id="tabHistory">Historial</button>
 </div>
 
-<script>
-// ==== CONFIGURACIÓN FIREBASE ====
-// Reemplaza con tu config de Firebase
-const firebaseConfig = {
-  apiKey: "TU_APIKEY",
-  authDomain: "TU_AUTHDOMAIN",
-  databaseURL: "TU_DATABASEURL",
-  projectId: "TU_PROJECTID",
-  storageBucket: "TU_STORAGEBUCKET",
-  messagingSenderId: "TU_MESSAGINGSENDERID",
-  appId: "TU_APPID"
-};
-firebase.initializeApp(firebaseConfig);
-const db = firebase.database();
+<!-- ===== APP + FIREBASE (moderno, type="module") ===== -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
+  import {
+    getDatabase,
+    ref,
+    set,
+    push,
+    onValue,
+    update,
+    remove
+  } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-database.js";
 
-// ==== CONSTANTES ====
-const CATEGORIES = {
-  lacteos:{label:'Lácteos', alertDays:2},
-  embutidos:{label:'Embutidos', alertDays:1},
-  carnes:{label:'Carnes', alertDays:2},
-  fruver:{label:'Fruver', alertDays:1},
-  congelados:{label:'Congelados', alertDays:1}
-};
+  // ====== TU CONFIG (la que compartiste) ======
+  const firebaseConfig = {
+    apiKey: "AIzaSyAy0pN2hmOARLRrWGHdbJHI_Rm3BnfwIvE",
+    authDomain: "contron-productos-tia.firebaseapp.com",
+    databaseURL: "https://contron-productos-tia-default-rtdb.firebaseio.com",
+    projectId: "contron-productos-tia",
+    storageBucket: "contron-productos-tia.firebasestorage.app",
+    messagingSenderId: "832499679175",
+    appId: "1:832499679175:web:4765167b898498b86523e2"
+  };
 
-function daysBetween(a,b){return Math.ceil((Date.UTC(b.getFullYear(),b.getMonth(),b.getDate())-Date.UTC(a.getFullYear(),a.getMonth(),a.getDate()))/(24*60*60*1000));}
-function uid(){return 'p_'+Math.random().toString(36).slice(2,9);}
+  const app = initializeApp(firebaseConfig);
+  const db = getDatabase(app);
 
-// ==== ELEMENTOS DOM ====
-let state = {products:[], history:[]};
-const groupCad = document.getElementById('group-caducados');
-const groupProx = document.getElementById('group-proximos');
-const groupVig = document.getElementById('group-vigentes');
-const historyList = document.getElementById('historyList');
-const mainScroll = document.getElementById('mainScroll');
-const modal = document.getElementById('modal');
-const btnAdd = document.getElementById('btnAdd');
-const cancelBtn = document.getElementById('cancelBtn');
-const saveBtn = document.getElementById('saveBtn');
-const backToProducts = document.getElementById('backToProducts');
-const historyView = document.getElementById('historyView');
-const fName = document.getElementById('fName');
-const fCategory = document.getElementById('fCategory');
-const fExpires = document.getElementById('fExpires');
-const fBarcode = document.getElementById('fBarcode'); // NUEVO
-const daysLeft = document.getElementById('daysLeft');
-const searchInput = document.getElementById('search');
-const filterChips = document.querySelectorAll('.filter-chip');
-const tabProducts = document.getElementById('tabProducts');
-const tabHistory = document.getElementById('tabHistory');
+  // ====== CONSTANTES / DOM ======
+  const CATEGORIES = {
+    lacteos:{label:'Lácteos', alertDays:2},
+    embutidos:{label:'Embutidos', alertDays:1},
+    carnes:{label:'Carnes', alertDays:2},
+    fruver:{label:'Fruver', alertDays:1},
+    congelados:{label:'Congelados', alertDays:1}
+  };
 
-// ==== FUNCIONES ====
-function computeStatus(p){
-  const today=new Date();
-  const exp=new Date(p.expiresAt);
-  const d=daysBetween(today,exp);
-  const cat=CATEGORIES[p.category]||{alertDays:1};
-  if(d<0) return {label:`Caducado (${Math.abs(d)}d)`, cls:'red'};
-  if(d<=cat.alertDays) return {label:`Próximo (${d}d)`, cls:'yellow'};
-  return {label:`Vigente (${d}d)`, cls:'green'};
-}
+  function daysBetween(a,b){return Math.ceil((Date.UTC(b.getFullYear(),b.getMonth(),b.getDate())-Date.UTC(a.getFullYear(),a.getMonth(),a.getDate()))/(24*60*60*1000));}
+  function uid(){return 'p_'+Math.random().toString(36).slice(2,9);}
 
-function createProductCard(p,st){
-  const card=document.createElement('div');
-  card.className='product-card '+(st.cls==='red'?'caducado':st.cls==='yellow'?'proximo':'vigente');
-  const left=document.createElement('div'); left.className='product-left';
-  left.innerHTML=`<div class="product-name">${p.name}</div>
-    <div class="product-meta">${CATEGORIES[p.category]?.label||p.category} • Caduca: ${p.expiresAt}${p.barcode ? ' • Código: '+p.barcode : ''}</div>`;
-  const actions=document.createElement('div'); actions.className='product-actions';
-  const badge=document.createElement('div'); badge.className='badge '+st.cls; badge.textContent=st.label;
-  actions.appendChild(badge);
-  if(!p.retired){
-    const btn=document.createElement('button'); btn.className='btn-action'; btn.textContent='Retirar';
-    btn.onclick=()=>{ retireProduct(p); };
-    actions.appendChild(btn);
+  let state = { products: [], history: [] };
+
+  const groupCad = document.getElementById('group-caducados');
+  const groupProx = document.getElementById('group-proximos');
+  const groupVig = document.getElementById('group-vigentes');
+  const historyList = document.getElementById('historyList');
+  const mainScroll = document.getElementById('mainScroll');
+  const modal = document.getElementById('modal');
+  const btnAdd = document.getElementById('btnAdd');
+  const cancelBtn = document.getElementById('cancelBtn');
+  const saveBtn = document.getElementById('saveBtn');
+  const backToProducts = document.getElementById('backToProducts');
+  const historyView = document.getElementById('historyView');
+  const fName = document.getElementById('fName');
+  const fCategory = document.getElementById('fCategory');
+  const fExpires = document.getElementById('fExpires');
+  const fBarcode = document.getElementById('fBarcode');
+  const daysLeft = document.getElementById('daysLeft');
+  const searchInput = document.getElementById('search');
+  const filterChips = document.querySelectorAll('.filter-chip');
+  const tabProducts = document.getElementById('tabProducts');
+  const tabHistory = document.getElementById('tabHistory');
+
+  // ====== UTILIDADES ======
+  function computeStatus(p){
+    const today=new Date();
+    const exp=new Date(p.expiresAt);
+    const d=daysBetween(today,exp);
+    const cat=CATEGORIES[p.category]||{alertDays:1};
+    if(d<0) return {label:`Caducado (${Math.abs(d)}d)`, cls:'red'};
+    if(d<=cat.alertDays) return {label:`Próximo (${d}d)`, cls:'yellow'};
+    return {label:`Vigente (${d}d)`, cls:'green'};
   }
-  card.appendChild(left); card.appendChild(actions); return card;
-}
 
-function renderProducts(){
-  groupCad.innerHTML=''; groupProx.innerHTML=''; groupVig.innerHTML='';
-  const q=searchInput.value.trim().toLowerCase();
-  const activeFilter=document.querySelector('.filter-chip.active')?.dataset.filter||'all';
-  const cad=[], prox=[], vig=[];
-  state.products.forEach(p=>{
-    if(activeFilter!=='all'&&p.category!==activeFilter) return;
-    if(q && !(p.name.toLowerCase().includes(q) || (p.barcode && p.barcode.includes(q)))) return; // BUSCAR POR NOMBRE O CÓDIGO
-    const st=computeStatus(p);
-    const card=createProductCard(p,st);
-    if(st.cls==='red') cad.push(card);
-    else if(st.cls==='yellow') prox.push(card);
-    else vig.push(card);
+  function createProductCard(p,st){
+    const card=document.createElement('div');
+    card.className='product-card '+(st.cls==='red'?'caducado':st.cls==='yellow'?'proximo':'vigente');
+    const left=document.createElement('div'); left.className='product-left';
+    left.innerHTML=`<div class="product-name">${p.name}</div>
+      <div class="product-meta">${CATEGORIES[p.category]?.label||p.category} • Caduca: ${p.expiresAt}${p.barcode ? ' • Código: '+p.barcode : ''}</div>`;
+    const actions=document.createElement('div'); actions.className='product-actions';
+    const badge=document.createElement('div'); badge.className='badge '+st.cls; badge.textContent=st.label;
+    actions.appendChild(badge);
+    if(!p.retired){
+      const btn=document.createElement('button'); btn.className='btn-action'; btn.textContent='Retirar';
+      btn.onclick=()=>{ retireProduct(p); };
+      actions.appendChild(btn);
+    }
+    card.appendChild(left); card.appendChild(actions); return card;
+  }
+
+  // ====== RENDER ======
+  function renderProducts(){
+    groupCad.innerHTML=''; groupProx.innerHTML=''; groupVig.innerHTML='';
+    const q=searchInput.value.trim().toLowerCase();
+    const activeFilter=document.querySelector('.filter-chip.active')?.dataset.filter||'all';
+    const cad=[], prox=[], vig=[];
+    (state.products||[]).forEach(p=>{
+      if(activeFilter!=='all'&&p.category!==activeFilter) return;
+      if(q && !(p.name.toLowerCase().includes(q) || (p.barcode && p.barcode.includes(q)))) return;
+      const st=computeStatus(p);
+      const card=createProductCard(p,st);
+      if(st.cls==='red') cad.push(card);
+      else if(st.cls==='yellow') prox.push(card);
+      else vig.push(card);
+    });
+    cad.forEach(c=>groupCad.appendChild(c));
+    prox.forEach(c=>groupProx.appendChild(c));
+    vig.forEach(c=>groupVig.appendChild(c));
+    if(!groupCad.hasChildNodes()) groupCad.innerHTML=`<div class="hint small-muted">No hay productos caducados</div>`;
+    if(!groupProx.hasChildNodes()) groupProx.innerHTML=`<div class="hint small-muted">No hay próximos productos</div>`;
+    if(!groupVig.hasChildNodes()) groupVig.innerHTML=`<div class="hint small-muted">No hay productos vigentes</div>`;
+  }
+
+  function renderHistory(){
+    historyList.innerHTML='';
+    (state.history||[]).slice().reverse().forEach(h=>{
+      const el=document.createElement('div'); el.className='history-card';
+      el.innerHTML=`<div class="history-left"><div style="font-weight:700">${h.name}</div><div class="small-muted">${CATEGORIES[h.category]?.label||h.category}</div></div>
+                    <div class="small-muted">${new Date(h.retiredAt).toLocaleString()}</div>`;
+      historyList.appendChild(el);
+    });
+    if(!historyList.hasChildNodes()) historyList.innerHTML=`<div class="hint small-muted">Aún no hay historial</div>`;
+  }
+
+  // ====== FIREBASE: guardado y lectura ======
+  // Guardar/actualizar producto por id
+  function saveProductToFirebase(p){
+    // p must contain .id
+    set(ref(db, 'products/' + p.id), p);
+  }
+
+  // Añadir entrada al historial (push)
+  function pushHistoryToFirebase(h){
+    const histRef = ref(db, 'history');
+    const newRef = push(histRef);
+    set(newRef, h);
+  }
+
+  // Retirar producto: marcar producto como retirado y agregar a history
+  function retireProduct(p){
+    p.retired = true;
+    p.retiredAt = new Date().toISOString();
+    // actualizar producto
+    saveProductToFirebase(p);
+    // push al historial
+    pushHistoryToFirebase({...p});
+    // mostrar cambios de forma local
+    renderProducts();
+    renderHistory();
+    mainScroll.scrollTo({top:0,behavior:'smooth'});
+  }
+
+  // Escuchar productos en tiempo real
+  const productsRef = ref(db, 'products');
+  onValue(productsRef, snapshot => {
+    const val = snapshot.val() || {};
+    // val es un objeto con llaves = id
+    // convertimos a array
+    const arr = Object.keys(val).map(k => val[k]);
+    state.products = arr;
+    // renderizar solo si estamos en la pestaña de productos
+    if (mainScroll.style.display !== 'none') renderProducts();
   });
-  cad.forEach(c=>groupCad.appendChild(c));
-  prox.forEach(c=>groupProx.appendChild(c));
-  vig.forEach(c=>groupVig.appendChild(c));
-  if(!groupCad.hasChildNodes()) groupCad.innerHTML=`<div class="hint small-muted">No hay productos caducados</div>`;
-  if(!groupProx.hasChildNodes()) groupProx.innerHTML=`<div class="hint small-muted">No hay próximos productos</div>`;
-  if(!groupVig.hasChildNodes()) groupVig.innerHTML=`<div class="hint small-muted">No hay productos vigentes</div>`;
-}
 
-function renderHistory(){
-  historyList.innerHTML='';
-  state.history.slice().reverse().forEach(h=>{
-    const el=document.createElement('div'); el.className='history-card';
-    el.innerHTML=`<div class="history-left"><div style="font-weight:700">${h.name}</div><div class="small-muted">${CATEGORIES[h.category]?.label||h.category}</div></div>
-                  <div class="small-muted">${new Date(h.retiredAt).toLocaleString()}</div>`;
-    historyList.appendChild(el);
+  // Escuchar historial en tiempo real
+  const historyRef = ref(db, 'history');
+  onValue(historyRef, snapshot => {
+    const val = snapshot.val() || {};
+    // val es un objeto con llaves pushId
+    const arr = Object.keys(val).map(k => val[k]);
+    state.history = arr;
+    if (historyView.style.display !== 'none') renderHistory();
   });
-  if(!historyList.hasChildNodes()) historyList.innerHTML=`<div class="hint small-muted">Aún no hay historial</div>`;
-}
 
-// ==== FIREBASE SYNC ====
-function saveToFirebase(){
-  db.ref('products').set(state.products);
-  db.ref('history').set(state.history);
-}
+  // ====== EVENTOS UI ======
+  filterChips.forEach(chip=>{chip.addEventListener('click',()=>{filterChips.forEach(c=>c.classList.remove('active')); chip.classList.add('active'); renderProducts(); mainScroll.scrollTo({top:0,behavior:'smooth'});});});
+  searchInput.addEventListener('input',()=>renderProducts());
 
-function retireProduct(p){
-  p.retired=true;
-  state.history.push({...p,retiredAt:new Date().toISOString()});
-  saveToFirebase();
+  btnAdd.addEventListener('click',()=>{modal.classList.add('show'); fName.value=''; fBarcode.value=''; fCategory.value='lacteos'; fExpires.value=''; daysLeft.textContent='— días'; fName.focus();});
+  cancelBtn.addEventListener('click',()=>modal.classList.remove('show'));
+
+  fExpires.addEventListener('change',()=>{const v=fExpires.value;if(!v){daysLeft.textContent='— días';return;}daysLeft.textContent=daysBetween(new Date(),new Date(v))+' día(s)';});
+
+  saveBtn.addEventListener('click',()=>{
+    const name=fName.value.trim(); const category=fCategory.value; const expiresAt=fExpires.value; const barcode=fBarcode.value.trim();
+    if(!name||!expiresAt){alert('Nombre y fecha de caducidad obligatorios'); return;}
+    const newProduct = { id: uid(), name, category, expiresAt, barcode: barcode||'', retired:false };
+    // Guardar en firebase
+    saveProductToFirebase(newProduct);
+    modal.classList.remove('show');
+    // actualizamos la UI local (se actualizará también cuando el listener reciba el cambio)
+    renderProducts();
+  });
+
+  tabProducts.addEventListener('click',()=>{mainScroll.style.display='flex'; historyView.style.display='none'; tabProducts.classList.add('active'); tabHistory.classList.remove('active'); renderProducts();});
+  tabHistory.addEventListener('click',()=>{mainScroll.style.display='none'; historyView.style.display='flex'; tabHistory.classList.add('active'); tabProducts.classList.remove('active'); renderHistory();});
+  backToProducts.addEventListener('click',()=>{tabProducts.click();});
+
+  // ====== INIT ======
   renderProducts();
-  renderHistory();
-  mainScroll.scrollTo({top:0,behavior:'smooth'});
-}
-
-// ==== EVENTOS ====
-filterChips.forEach(chip=>{chip.addEventListener('click',()=>{filterChips.forEach(c=>c.classList.remove('active')); chip.classList.add('active'); renderProducts(); mainScroll.scrollTo({top:0,behavior:'smooth'});});});
-searchInput.addEventListener('input',()=>renderProducts());
-
-btnAdd.addEventListener('click',()=>{modal.classList.add('show'); fName.value=''; fBarcode.value=''; fCategory.value='lacteos'; fExpires.value=''; daysLeft.textContent='— días'; fName.focus();});
-cancelBtn.addEventListener('click',()=>modal.classList.remove('show'));
-
-fExpires.addEventListener('change',()=>{const v=fExpires.value;if(!v){daysLeft.textContent='— días';return;}daysLeft.textContent=daysBetween(new Date(),new Date(v))+' día(s)';});
-
-saveBtn.addEventListener('click',()=>{
-  const name=fName.value.trim(); const category=fCategory.value; const expiresAt=fExpires.value; const barcode=fBarcode.value.trim();
-  if(!name||!expiresAt){alert('Nombre y fecha de caducidad obligatorios'); return;}
-  state.products.push({id:uid(),name,category,expiresAt,barcode,retired:false});
-  saveToFirebase();
-  modal.classList.remove('show'); renderProducts();
-});
-
-tabProducts.addEventListener('click',()=>{mainScroll.style.display='flex'; historyView.style.display='none'; tabProducts.classList.add('active'); tabHistory.classList.remove('active');});
-tabHistory.addEventListener('click',()=>{mainScroll.style.display='none'; historyView.style.display='flex'; tabHistory.classList.add('active'); tabProducts.classList.remove('active'); renderHistory();});
-backToProducts.addEventListener('click',()=>{tabProducts.click();});
-
-// ==== INIT ====
-renderProducts();
 </script>
 </body>
 </html>
